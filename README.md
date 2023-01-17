@@ -6,9 +6,10 @@
 
 ## Technologies Used
 
-* MaterialUI
 * React
 * NPM & Webpack
+* MaterialUI
+* Context API
 * React DnD
 
 ## Description
