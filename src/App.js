@@ -1,11 +1,14 @@
-import RegisterUser from "./Components/RegisterUser";
+import { AuthProvider } from "./Contexts/AuthContext";
+import RegisterUser from "./Components/tempAuth/RegisterUser";
+import AccountOptions from "./Components/tempAuth/AccountOptions";
 
 const App = () => {
   return (
-    <div>
+    <AuthProvider>
       <h1>TaskFlow</h1>
       <RegisterUser />
-    </div>
+      <AccountOptions />
+    </AuthProvider>
   );
 }
 
