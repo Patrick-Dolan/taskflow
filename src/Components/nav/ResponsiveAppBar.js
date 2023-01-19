@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,6 +22,7 @@ const UserAuthActions = ["Sign up", "Log in"]
 
 function ResponsiveAppBar() {
   const { user, logout } = UserAuth();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [openUserAuthDialog, setOpenUserAuthDialog] = useState(false);
@@ -50,7 +51,7 @@ function ResponsiveAppBar() {
   };
 
   // Closes user menu on nav then selects dialog or logout based on choice
-  const handleCloseUserMenu = (action) => {
+  const handleCloseUserMenu = async (action) => {
     setAnchorElUser(null);
     // Switch opens proper dialog based on choice or logs out
     switch (action) {
@@ -63,7 +64,12 @@ function ResponsiveAppBar() {
         handleUserAuthDialogClickOpen();
         break;
       case "Logout":
-        logout();
+        try {
+          await logout();
+          navigate("/");
+        } catch (e) {
+          console.log("Logout error: ", e.message);
+        }
         break;
       default: 
         return
