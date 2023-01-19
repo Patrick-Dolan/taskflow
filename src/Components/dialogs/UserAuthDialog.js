@@ -46,7 +46,7 @@ const UserAuthDialog = (props) => {
       handleUserAuthDialogClose();
     } catch (e) {
       setError(e.message);
-      console.log("Register User Error: ", error);
+      console.log("Register User Error: ", e.message);
     }
   }
 
@@ -58,7 +58,7 @@ const UserAuthDialog = (props) => {
       handleUserAuthDialogClose();
     } catch (e) {
       setError(e.message);
-      console.log("Sign in User Error: ", error);
+      console.log("Sign in User Error: ", e.message);
     }
   }
 
