@@ -7,6 +7,7 @@ import Tasks from "./Components/tasks/Tasks";
 import Settings from "./Components/settings/Settings";
 import Account from "./Components/account/Account";
 import Profile from "./Components/account/Profile";
+import PasswordRecovery from "./Components/account/PasswordRecovery";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="Profile" element={<Profile />} />
         <Route path="Account" element={<Account />} />
         <Route path="Settings" element={<Settings />} />
+        <Route path="PasswordRecovery" element={<PasswordRecovery />} />
       </Routes>
     </AuthProvider>
   );
