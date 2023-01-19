@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,15 +13,31 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import { UserAuth } from '../../Contexts/AuthContext';
+import UserAuthDialog from "../dialogs/UserAuthDialog";
 
 const pages = ["Home", "Projects", "Tasks"];
 const settings = ['Profile', 'Account', 'Settings'];
+const UserAuthActions = ["Sign up", "Log in"]
 
 function ResponsiveAppBar() {
-  // TODO: Refactor useState hook with import statement
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user, logout } = UserAuth();
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [openUserAuthDialog, setOpenUserAuthDialog] = useState(false);
+  const [type, setType] = useState("");
 
+  // UserAuthDialog functions
+
+  const handleUserAuthDialogClickOpen = () => {
+    setOpenUserAuthDialog(true);
+  };
+
+  const handleLoginSignupToggle = () => {
+    (type === "Sign up") ? setType(UserAuthActions[1]) : setType(UserAuthActions[0]);
+  }
+
+  // Appbar nav handlers
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -33,8 +49,25 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  // Closes user menu on nav then selects dialog or logout based on choice
+  const handleCloseUserMenu = (action) => {
     setAnchorElUser(null);
+    // Switch opens proper dialog based on choice or logs out
+    switch (action) {
+      case "Sign up":
+        setType(action);
+        handleUserAuthDialogClickOpen();
+        break;
+      case "Log in":
+        setType(action);
+        handleUserAuthDialogClickOpen();
+        break;
+      case "Logout":
+        logout();
+        break;
+      default: 
+        return
+    }
   };
 
   return (
@@ -136,8 +169,11 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* TODO: Setup avatar name */}
-                <Avatar alt="Account name" src="/static/images/avatar/2.jpg" />
+                {(user?.uid) ? (
+                  <Avatar alt={user?.email.toUpperCase()} src="/static/images/avatar/2.jpg" />
+                ) : (
+                  <Avatar />
+                )}
               </IconButton>
             </Tooltip>
             <Menu
@@ -156,20 +192,39 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">
-                    <Link style={{textDecoration: "none", color: "#000000DE"}} to={`/${setting}`}>
-                      {setting}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-              {/* TODO: Setup logout click function to tie in with UserContext */}
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
+              {(user?.uid) ? (
+                <div>
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">
+                        <Link style={{textDecoration: "none", color: "#000000DE"}} to={`/${setting}`}>
+                          {setting}
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={() => handleCloseUserMenu("Logout")}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </div>
+              ) : (
+                <div>
+                  {UserAuthActions.map((action) => (
+                    <MenuItem key={action} onClick={(e) => handleCloseUserMenu(action)}>
+                      <Typography textAlign="center">
+                        {action}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </div>
+              )}
             </Menu>
+            <UserAuthDialog 
+              type={type}
+              open={openUserAuthDialog} 
+              setOpen={setOpenUserAuthDialog} 
+              toggleLoginSignup={handleLoginSignupToggle}
+            />
           </Box>
         </Toolbar>
       </Container>
