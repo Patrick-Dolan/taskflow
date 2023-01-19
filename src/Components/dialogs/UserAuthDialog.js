@@ -5,6 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { UserAuth } from '../../Contexts/AuthContext';
+import { useState } from 'react';
 
 const UserAuthDialog = (props) => {
 
@@ -25,10 +27,40 @@ const UserAuthDialog = (props) => {
   // ===========================================================================================
 
   const { open, setOpen, type, toggleLoginSignup } = props;
+  const { signIn, registerUser } = UserAuth();
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [passwordRegister, setPasswordRegister] = useState("");
+  const [error, setError] = useState("")
 
   const handleUserAuthDialogClose = () => {
     setOpen(false);
   };
+
+  const handleRegisterAccount = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await registerUser(registerEmail, passwordRegister);
+      handleUserAuthDialogClose();
+    } catch (e) {
+      setError(e.message);
+      console.log("Register User Error: ", error);
+    }
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signIn(loginEmail, loginPassword);
+      handleUserAuthDialogClose();
+    } catch (e) {
+      setError(e.message);
+      console.log("Sign in User Error: ", error);
+    }
+  }
 
   if (type === "Sign up") {
     return (
@@ -43,7 +75,8 @@ const UserAuthDialog = (props) => {
             fullWidth
             variant="outlined"
             required
-          />
+            onChange={(e) => setRegisterEmail(e.target.value)}
+            />
           <TextField
             margin="dense"
             label="Password"
@@ -51,19 +84,21 @@ const UserAuthDialog = (props) => {
             fullWidth
             variant="outlined"
             required
+            onChange={(e) => setPasswordRegister(e.target.value)}
           />
-          <TextField
+          {/* TODO: Setup password confirmation */}
+          {/* <TextField
             margin="dense"
             label="Confirm Password"
             type="password"
             fullWidth
             variant="outlined"
             required
-          />
+          /> */}
           <Box
             sx={{margin: "1.5em 0"}}
           >
-            <Button fullWidth size="large" onClick={handleUserAuthDialogClose} variant="contained">Sign up</Button>
+            <Button fullWidth size="large" onClick={handleRegisterAccount} variant="contained">Sign up</Button>
           </Box>
           <Typography sx={{color: "grey"}} variant="caption">Already have an account? </Typography>
           <Link style={{textDecorationColor: "grey", color: "grey"}}>
@@ -85,6 +120,7 @@ const UserAuthDialog = (props) => {
             fullWidth
             variant="outlined"
             required
+            onChange={(e) => setLoginEmail(e.target.value)}
           />
           <TextField
             margin="dense"
@@ -93,6 +129,7 @@ const UserAuthDialog = (props) => {
             fullWidth
             variant="outlined"
             required
+            onChange={(e) => setLoginPassword(e.target.value)}
           />
           <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={handleUserAuthDialogClose} to={`/PasswordRecovery`}>
             <Typography variant="caption">Forgot password?</Typography>
@@ -100,7 +137,7 @@ const UserAuthDialog = (props) => {
           <Box
             sx={{margin: "1.5em 0"}}
           >
-            <Button fullWidth size="large" onClick={handleUserAuthDialogClose} variant="contained">Log in</Button>
+            <Button fullWidth size="large" onClick={handleLogin} variant="contained">Log in</Button>
           </Box>
           <Typography variant="caption">Don't have an account yet? </Typography>
           <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={toggleLoginSignup}>
