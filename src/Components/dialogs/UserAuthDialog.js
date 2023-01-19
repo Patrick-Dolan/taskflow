@@ -32,7 +32,6 @@ const UserAuthDialog = (props) => {
   const [loginPassword, setLoginPassword] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
-  const [error, setError] = useState("")
 
   const handleUserAuthDialogClose = () => {
     setOpen(false);
@@ -40,24 +39,20 @@ const UserAuthDialog = (props) => {
 
   const handleRegisterAccount = async (e) => {
     e.preventDefault();
-    setError("");
     try {
       await registerUser(registerEmail, passwordRegister);
       handleUserAuthDialogClose();
     } catch (e) {
-      setError(e.message);
       console.log("Register User Error: ", e.message);
     }
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
     try {
       await signIn(loginEmail, loginPassword);
       handleUserAuthDialogClose();
     } catch (e) {
-      setError(e.message);
       console.log("Sign in User Error: ", e.message);
     }
   }
