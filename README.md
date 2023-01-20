@@ -11,6 +11,7 @@
 * MaterialUI
 * Context API
 * React DnD
+* Firebase
 
 ## Description
 
