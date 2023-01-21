@@ -19,8 +19,8 @@ const Projects = () => {
   
   const handleCreateProject = () => {
     setNewProject({
-      name: projectName,
-      description: projectDescription
+      name: projectName.trim(),
+      description: projectDescription.trim()
     })
   }
 
