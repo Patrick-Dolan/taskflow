@@ -10,7 +10,7 @@ const ProtectedRoute = (props) => {
     if (!user) {
       handleUnauthorizedAccess();
     }
-  }, [snackbarOpen])
+  }, [snackbarOpen, handleUnauthorizedAccess, user])
 
   if (!user) {
     return <Navigate to="/" />
