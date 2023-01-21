@@ -1,10 +1,16 @@
 import { Container } from "@mui/system";
-import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import ProjectCreateDialog from "./ProjectCreateDialog";
+import ProjectsToolbar from "./ProjectsToolbar";
+import ProjectsList from "./ProjectsList";
 
 const Projects = () => {
   const [newProject, setNewProject] = useState({});
+  const [projects, setProjects] = useState([
+    {name: "seed1", description: "description"},
+    {name: "seed2", description: "description2"},
+    {name: "seed3", description: "description3 "},
+  ]);
 
   // Dialog State
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
@@ -22,14 +28,20 @@ const Projects = () => {
       name: projectName.trim(),
       description: projectDescription.trim()
     })
+
+    setProjects([...projects, {
+      name: projectName.trim(),
+      description: projectDescription.trim()
+    }])
   }
 
-  console.log(newProject);
+  console.log("New project: ", newProject);
+  console.log("All projects: ", projects);
 
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
-      <Typography variant="h4">Projects</Typography>
-      <Button variant="outlined" onClick={handleProjectCreateOpen}>Create Project</Button>
+      <ProjectsToolbar handleCreateProjectDialogBox={handleProjectCreateOpen} />
+      <ProjectsList projects={projects} />
       <ProjectCreateDialog
         open={openProjectCreate}
         setOpen={setOpenProjectCreate}
