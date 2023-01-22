@@ -52,25 +52,10 @@ const Projects = () => {
     },
   ]);
   const [selectedProject, setSelectedProject] = useState({});
-
-  // Dialog State
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
-  
-  // Create project State
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
   
   const handleProjectCreateOpen = () => {
     setOpenProjectCreate(true);
-  }
-  
-  const handleCreateProject = () => {
-    setSelectedProject(null);
-    setProjects([...projects, {
-      id: uuid(),
-      name: projectName.trim(),
-      description: projectDescription.trim()
-    }])
   }
 
   return (
@@ -89,9 +74,9 @@ const Projects = () => {
       <ProjectCreateDialog
         open={openProjectCreate}
         setOpen={setOpenProjectCreate}
-        setProjectName={setProjectName}
-        setProjectDescription={setProjectDescription}
-        createProject={handleCreateProject}
+        projects={projects}
+        setProjects={setProjects}
+        setSelectedProject={setSelectedProject}
       />
     </Container>
   )
