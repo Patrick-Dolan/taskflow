@@ -5,37 +5,10 @@ import ProjectEditDialog from "./ProjectEditDialog";
 
 const ProjectDetails = (props) => {
   const { project, projects, setProjects, setSelectedProject } = props;
-
-  // Edit project State
-  const [editedProjectName, setEditedProjectName] = useState("");
-  const [editedProjectDescription, setEditedProjectDescription] = useState("");
   const [openProjectEdit, setOpenProjectEdit] = useState(false);
   
   const handleProjectEditOpen = () => {
     setOpenProjectEdit(true);
-    setEditedProjectName(project?.name);
-    setEditedProjectDescription(project?.description);
-  }
-
-  const handleUpdateProject = () => {
-    const filteredProjects = projects.filter((p) => p.id !== project.id);
-    
-    // Update ProjectsList component information
-    setProjects([
-      ...filteredProjects,
-      {
-        ...project,
-        name: editedProjectName,
-        description: editedProjectDescription
-      }
-    ])
-
-    // Updates state for details page to show new info
-    setSelectedProject({
-      ...project,
-      name: editedProjectName,
-      description: editedProjectDescription
-    })
   }
 
   return (
@@ -66,9 +39,9 @@ const ProjectDetails = (props) => {
         open={openProjectEdit}
         setOpen={setOpenProjectEdit}
         project={project}
-        setEditedProjectName={setEditedProjectName}
-        setEditedProjectDescription={setEditedProjectDescription}
-        updateProject={handleUpdateProject}
+        projects={projects}
+        setProjects={setProjects}
+        setSelectedProject={setSelectedProject}
       />
     </>
   )
