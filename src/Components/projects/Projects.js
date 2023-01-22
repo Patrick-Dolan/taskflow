@@ -7,9 +7,50 @@ import ProjectDetails from "./ProjectDetails";
 
 const Projects = () => {
   const [projects, setProjects] = useState([
-    {name: "seed1", description: "description"},
-    {name: "seed2", description: "description2"},
-    {name: "seed3", description: "description3 ", tasks: ["Task one", "Task two"]},
+    {
+      name: "TaskFlow", 
+      description: "A project management application that incorporates both task assignments and communication features.",
+      tasks: [
+        "Build project functionality",
+        "Build task functionality",
+        "Setup firestore database",
+        "Setup Hosting through firebase",
+        "Add to portfolio"
+      ]
+    },
+    {
+      name: "Build a Custom PC",
+      description: "Assemble a custom built PC tailored to your gaming or work needs, with the latest hardware and design.",
+      tasks: [
+        "Research and select the components for the build (CPU, GPU, motherboard, etc.)",
+        "Acquire the necessary tools for the build (screwdrivers, thermal paste, etc.)",
+        "Assemble the PC according to the chosen design",
+        "Install the operating system and necessary drivers",
+        "Test and troubleshoot the build to ensure it is fully functional"
+      ]
+    },
+    {
+      name: "Cosplay Creation",
+      description: "Create a detailed cosplay of a favorite character from a geek culture series, movie, or game.",
+      tasks: [
+        "Research the chosen character and gather reference images",
+        "Create a design plan and gather materials for the cosplay",
+        "Begin construction of the cosplay, including any necessary sewing, molding, or sculpting",
+        "Apply any paint, detailing, or finishing touches to the cosplay",
+        "Final fitting and preparation for debut at a convention or event"
+      ]
+    },
+    {
+      name: "Tabletop RPG Campaign",
+      description: "Create and run a campaign for a group of friends to play through a tabletop roleplaying game.",
+      tasks: [
+        "Research and select a tabletop RPG system to use for the campaign",
+        "Create a detailed world and lore for the campaign",
+        "Design and create non-player characters and enemies for the campaign",
+        "Write and prepare a series of quests and events for the players to experience",
+        "Run and facilitate the campaign sessions with the group"
+      ]
+    },
   ]);
   const [selectedProject, setSelectedProject] = useState({});
 
