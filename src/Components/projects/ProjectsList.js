@@ -8,7 +8,7 @@ const ProjectsList = (props) => {
   return (
     <TableContainer component={Paper}>
       <Table  aria-label="Projects list">
-        <TableHead sx={{}}>
+        <TableHead>
           <TableRow>
             <TableCell><Typography>Project Name</Typography></TableCell>
             <TableCell><Typography>Description</Typography></TableCell>
@@ -23,7 +23,7 @@ const ProjectsList = (props) => {
               onClick={() => setSelectedProject(project)}
             >
               <TableCell><Typography>{project?.name}</Typography></TableCell>
-              <TableCell><Typography>{project?.description}</Typography></TableCell>
+              <TableCell><Typography>{(project?.description) ? `${project.description}` : "No project description available."}</Typography></TableCell>
             </TableRow>
           ))}
         </TableBody>
