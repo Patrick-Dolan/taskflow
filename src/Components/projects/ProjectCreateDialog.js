@@ -73,7 +73,7 @@ const ProjectCreateDialog = (props) => {
             fullWidth
             required
           />
-          <Button variant="outlined" onClick={handleCreateProject}>Create Project SUBMIT</Button>
+          <Button variant="outlined" onClick={handleCreateProject}>Create project</Button>
         </Container>
       </Dialog>
     </div>
