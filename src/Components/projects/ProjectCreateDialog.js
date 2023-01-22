@@ -9,21 +9,49 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import { useState } from 'react';
+import { v4 as uuid } from "uuid";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ProjectCreateDialog = (props) => {
-  const { open, setOpen, setProjectName, setProjectDescription, createProject } = props; 
+  const { open, setOpen, projects, setProjects, setSelectedProject } = props; 
+  const [projectName, setProjectName] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [error, setError] = useState(false);
+
 
   const handleClose = () => {
+    setError(false);
     setOpen(false);
   };
 
   const handleCreateProject = () => {
-    createProject();
+    // Sets selected project to null if create project button is clicked while in project details to hide details component
+    setSelectedProject(null);
+
+    // Add project to projects array
+    setProjects([...projects, {
+      id: uuid(),
+      name: projectName.trim(),
+      description: projectDescription.trim()
+    }])
+
+    // Close project create dialog box and reset create project state
+    setProjectName("");
+    setProjectDescription("");
     setOpen(false);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    (projectName !== "") ? setError(false) : setError(true);
+
+    if (projectName.length >= 1) {
+      handleCreateProject()
+    }
   }
 
   return (
@@ -54,26 +82,28 @@ const ProjectCreateDialog = (props) => {
           </Toolbar>
         </AppBar>
         <Container maxWidth="md">
-          <TextField
-            type="text"
-            label="Project Name"
-            onChange={(e) => setProjectName(e.target.value)}
-            margin="normal"
-            fullWidth
-            required
-          />
-          <TextField
-            type="text"
-            label="Description"
-            onChange={(e) => setProjectDescription(e.target.value)}
-            size="small"
-            minRows="4"
-            margin="normal"
-            multiline
-            fullWidth
-            required
-          />
-          <Button variant="outlined" onClick={handleCreateProject}>Create project</Button>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              type="text"
+              label="Project Name*"
+              onChange={(e) => setProjectName(e.target.value)}
+              margin="normal"
+              error={error}
+              helperText={(error) ? "Project name is required" : ""}
+              fullWidth
+            />
+            <TextField
+              type="text"
+              label="Description"
+              onChange={(e) => setProjectDescription(e.target.value)}
+              size="small"
+              minRows="4"
+              margin="normal"
+              multiline
+              fullWidth
+            />
+            <Button type="submit" variant="outlined">Create project</Button>
+          </form>
         </Container>
       </Dialog>
     </div>
