@@ -16,9 +16,9 @@ const ProjectsList = (props) => {
         </TableHead>
         <TableBody>
           {projects?.map((project, index) => (
-            // TODO replace key with id when integrating firebase
+            // TODO replace key/id with Firebase id 
             <TableRow 
-              key={index} 
+              key={project?.id || index} 
               sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light }}}
               onClick={() => setSelectedProject(project)}
             >
