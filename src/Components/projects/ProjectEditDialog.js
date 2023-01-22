@@ -1,5 +1,5 @@
 import { Container } from '@mui/system';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { TextField } from '@mui/material';
@@ -15,19 +15,39 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const ProjectEditDialog = (props) => {
-  const { open, setOpen, project, setEditedProjectName, setEditedProjectDescription, updateProject } = props; 
+  const { open, setOpen, project, projects, setProjects, setSelectedProject } = props; 
+
+  const [editedProjectName, setEditedProjectName] = useState(project?.name);
+  const [editedProjectDescription, setEditedProjectDescription] = useState(project?.description);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleUpdateProject = () => {
-    updateProject();
+    // Filter out old version of project and create updatedProject object
+    const filteredProjects = projects.filter((p) => p.id !== project.id);
+    const updatedProject = {
+      ...project,
+      name: editedProjectName,
+      description: editedProjectDescription
+    }
+    
+    // Update ProjectsList component information by adding updated project back to projects
+    setProjects([
+      ...filteredProjects,
+      updatedProject
+    ])
+
+    // Updates state for details page to show new info
+    setSelectedProject(updatedProject)
+
+    // Close ProjectEditDialog
     setOpen(false);
   }
 
   return (
-    <div>
+    <>
       <Dialog
         fullScreen
         open={open}
@@ -78,7 +98,7 @@ const ProjectEditDialog = (props) => {
           <Button variant="outlined" onClick={handleUpdateProject}>Update project</Button>
         </Container>
       </Dialog>
-    </div>
+    </>
   );
 }
 
