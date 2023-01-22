@@ -4,10 +4,13 @@ import ProjectCreateDialog from "./ProjectCreateDialog";
 import ProjectsToolbar from "./ProjectsToolbar";
 import ProjectsList from "./ProjectsList";
 import ProjectDetails from "./ProjectDetails";
+import { v4 as uuid } from "uuid";
+
 
 const Projects = () => {
   const [projects, setProjects] = useState([
     {
+      id: uuid(),
       name: "TaskFlow", 
       description: "A project management application that incorporates both task assignments and communication features.",
       tasks: [
@@ -19,6 +22,7 @@ const Projects = () => {
       ]
     },
     {
+      id: uuid(),
       name: "Build a Custom PC",
       description: "Assemble a custom built PC tailored to your gaming or work needs, with the latest hardware and design.",
       tasks: [
@@ -30,17 +34,12 @@ const Projects = () => {
       ]
     },
     {
+      id: uuid(),
       name: "Cosplay Creation",
       description: "Create a detailed cosplay of a favorite character from a geek culture series, movie, or game.",
-      tasks: [
-        "Research the chosen character and gather reference images",
-        "Create a design plan and gather materials for the cosplay",
-        "Begin construction of the cosplay, including any necessary sewing, molding, or sculpting",
-        "Apply any paint, detailing, or finishing touches to the cosplay",
-        "Final fitting and preparation for debut at a convention or event"
-      ]
     },
     {
+      id: uuid(),
       name: "Tabletop RPG Campaign",
       description: "Create and run a campaign for a group of friends to play through a tabletop roleplaying game.",
       tasks: [
@@ -68,6 +67,7 @@ const Projects = () => {
   const handleCreateProject = () => {
     setSelectedProject(null);
     setProjects([...projects, {
+      id: uuid(),
       name: projectName.trim(),
       description: projectDescription.trim()
     }])
@@ -76,10 +76,12 @@ const Projects = () => {
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
       <ProjectsToolbar handleCreateProjectDialogBox={handleProjectCreateOpen} />
-      {(selectedProject?.name) ? (
+      {(selectedProject?.id) ? (
         <ProjectDetails
           project={selectedProject}
+          projects={projects}
           setSelectedProject={setSelectedProject}
+          setProjects={setProjects}
         />
       ) : (
         <ProjectsList projects={projects} setSelectedProject={setSelectedProject} />
