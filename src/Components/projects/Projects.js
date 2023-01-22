@@ -3,14 +3,15 @@ import { useState } from "react";
 import ProjectCreateDialog from "./ProjectCreateDialog";
 import ProjectsToolbar from "./ProjectsToolbar";
 import ProjectsList from "./ProjectsList";
+import ProjectDetails from "./ProjectDetails";
 
 const Projects = () => {
-  const [newProject, setNewProject] = useState({});
   const [projects, setProjects] = useState([
     {name: "seed1", description: "description"},
     {name: "seed2", description: "description2"},
-    {name: "seed3", description: "description3 "},
+    {name: "seed3", description: "description3 ", tasks: ["Task one", "Task two"]},
   ]);
+  const [selectedProject, setSelectedProject] = useState({});
 
   // Dialog State
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
@@ -24,24 +25,24 @@ const Projects = () => {
   }
   
   const handleCreateProject = () => {
-    setNewProject({
-      name: projectName.trim(),
-      description: projectDescription.trim()
-    })
-
+    setSelectedProject(null);
     setProjects([...projects, {
       name: projectName.trim(),
       description: projectDescription.trim()
     }])
   }
 
-  console.log("New project: ", newProject);
-  console.log("All projects: ", projects);
-
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
       <ProjectsToolbar handleCreateProjectDialogBox={handleProjectCreateOpen} />
-      <ProjectsList projects={projects} />
+      {(selectedProject?.name) ? (
+        <ProjectDetails
+          project={selectedProject}
+          setSelectedProject={setSelectedProject}
+        />
+      ) : (
+        <ProjectsList projects={projects} setSelectedProject={setSelectedProject} />
+      )}
       <ProjectCreateDialog
         open={openProjectCreate}
         setOpen={setOpenProjectCreate}
