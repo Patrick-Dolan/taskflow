@@ -23,6 +23,7 @@ const ProjectsToolbar = (props) => {
           <Autocomplete
             options={projectNames}
             getOptionLabel={(option) => option}
+            size="small"
             clearOnBlur
             renderInput={(params) => (
               <TextField
