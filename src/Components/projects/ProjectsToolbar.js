@@ -1,7 +1,9 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 const ProjectsToolbar = (props) => {
-  const { handleCreateProjectDialogBox } = props;
+  const { handleCreateProjectDialogBox, projects, setSearchedProject } = props;
+
+  const projectNames = projects.map((e) => (e.name));
 
   return (
     <>
@@ -13,7 +15,28 @@ const ProjectsToolbar = (props) => {
         }}
       >
         <Typography variant="h4">Projects</Typography>
-        <Button variant="outlined" onClick={handleCreateProjectDialogBox}>Create Project</Button>
+        <Box
+          sx={{
+            display: "flex"
+          }}
+        >
+          <Autocomplete
+            options={projectNames}
+            getOptionLabel={(option) => option}
+            clearOnBlur
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                // TODO setup mobile view
+                sx={{minWidth: { sm: "15em", md: "30em" }}}
+                label="Search for a project"
+                variant="outlined"
+              />
+            )}
+            onChange={(event, value) => setSearchedProject(value)}
+          />
+          <Button variant="outlined" onClick={handleCreateProjectDialogBox}>Create Project</Button>
+        </Box>
       </Box>
       <Divider />
     </>
