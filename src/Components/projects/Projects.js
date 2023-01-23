@@ -52,15 +52,21 @@ const Projects = () => {
     },
   ]);
   const [selectedProject, setSelectedProject] = useState({});
+  const [searchedProject, setSearchedProject] = useState(null);
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
-  
+
   const handleProjectCreateOpen = () => {
     setOpenProjectCreate(true);
   }
 
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
-      <ProjectsToolbar handleCreateProjectDialogBox={handleProjectCreateOpen} />
+      <ProjectsToolbar 
+        handleCreateProjectDialogBox={handleProjectCreateOpen} 
+        projects={projects} 
+        searchedProject={searchedProject}
+        setSearchedProject={setSearchedProject}
+      />
       {(selectedProject?.id) ? (
         <ProjectDetails
           project={selectedProject}
@@ -69,7 +75,11 @@ const Projects = () => {
           setProjects={setProjects}
         />
       ) : (
-        <ProjectsList projects={projects} setSelectedProject={setSelectedProject} />
+        <ProjectsList 
+          projects={projects} 
+          setSelectedProject={setSelectedProject} 
+          searchedProject={searchedProject}
+        />
       )}
       <ProjectCreateDialog
         open={openProjectCreate}
