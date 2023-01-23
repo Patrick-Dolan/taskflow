@@ -16,11 +16,12 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const ProjectEditDialog = (props) => {
   const { open, setOpen, project, projects, setProjects, setSelectedProject } = props; 
-
   const [editedProjectName, setEditedProjectName] = useState(project?.name);
   const [editedProjectDescription, setEditedProjectDescription] = useState(project?.description);
+  const [error, setError] = useState(false);
 
   const handleClose = () => {
+    setError(false);
     setOpen(false);
   };
 
@@ -44,6 +45,15 @@ const ProjectEditDialog = (props) => {
 
     // Close ProjectEditDialog
     setOpen(false);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    (editedProjectName !== "") ? setError(false) : setError(true);
+
+    if (editedProjectName.length >= 1) {
+      handleUpdateProject();
+    }
   }
 
   return (
@@ -74,28 +84,30 @@ const ProjectEditDialog = (props) => {
           </Toolbar>
         </AppBar>
         <Container maxWidth="md">
-          <TextField
-            type="text"
-            label="Project Name"
-            defaultValue={project?.name}
-            onChange={(e) => setEditedProjectName(e.target.value)}
-            margin="normal"
-            fullWidth
-            required
-          />
-          <TextField
-            type="text"
-            label="Description"
-            defaultValue={project?.description}
-            onChange={(e) => setEditedProjectDescription(e.target.value)}
-            size="small"
-            minRows="4"
-            margin="normal"
-            multiline
-            fullWidth
-            required
-          />
-          <Button variant="outlined" onClick={handleUpdateProject}>Update project</Button>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              type="text"
+              label="Project Name"
+              defaultValue={project?.name}
+              onChange={(e) => setEditedProjectName(e.target.value)}
+              margin="normal"
+              error={error}
+              helperText={(error) ? "Project name is required" : ""}
+              fullWidth
+            />
+            <TextField
+              type="text"
+              label="Description"
+              defaultValue={project?.description}
+              onChange={(e) => setEditedProjectDescription(e.target.value)}
+              size="small"
+              minRows="4"
+              margin="normal"
+              multiline
+              fullWidth
+            />
+            <Button type="submit" variant="outlined">Update project</Button>
+          </form>
         </Container>
       </Dialog>
     </>
