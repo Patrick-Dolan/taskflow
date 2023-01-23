@@ -1,10 +1,10 @@
 import { Container } from "@mui/system";
-import { Typography } from "@mui/material";
+import TasksToolbar from "./TasksToolbar";
 
 const Tasks = () => {
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4">Tasks placeholder</Typography>
+    <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
+      <TasksToolbar />
     </Container>
   )
 }
