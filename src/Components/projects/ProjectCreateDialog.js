@@ -50,7 +50,7 @@ const ProjectCreateDialog = (props) => {
     (projectName !== "") ? setError(false) : setError(true);
 
     if (projectName.length >= 1) {
-      handleCreateProject()
+      handleCreateProject();
     }
   }
 
