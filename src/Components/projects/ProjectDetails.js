@@ -26,7 +26,7 @@ const ProjectDetails = (props) => {
       <Typography variant="caption">Project Name</Typography>
       <Typography variant="h5">{project?.name}</Typography>
       <Typography variant="caption">Description</Typography>
-      <Typography>{project?.description}</Typography>
+      <Typography>{(project?.description) ? `${project.description}` : "No description available."}</Typography>
       <Typography variant="caption">Tasks</Typography>
       {(project.tasks) ? (
         project?.tasks.map((task, index) => (
