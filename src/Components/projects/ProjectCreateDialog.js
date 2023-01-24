@@ -29,8 +29,8 @@ const ProjectCreateDialog = (props) => {
   };
 
   const handleCreateProject = () => {
-    // Sets selected project to null if create project button is clicked while in project details to hide details component
-    setSelectedProject(null);
+    // Sets selected project to an empty object if create project button is clicked while in project details to hide details component
+    setSelectedProject({});
 
     // Add project to projects array
     setProjects([...projects, {
