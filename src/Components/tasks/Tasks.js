@@ -110,8 +110,6 @@ const Tasks = () => {
     setOpenTaskCreate(true);
   }
 
-  console.log(tasks)
-
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
       <TasksToolbar 
