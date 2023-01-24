@@ -20,7 +20,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const TaskCreateDialog = (props) => {
-  const { open, setOpen, tasks, setTasks } = props; 
+  const { open, setOpen, tasks, setTasks, setSelectedTask } = props; 
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [error, setError] = useState(false);
@@ -35,8 +35,8 @@ const TaskCreateDialog = (props) => {
   };
 
   const handleCreateProject = () => {
-    // Sets selected task to null if create task button is clicked while in task details to hide details component
-    // setSelectedTask(null);
+    // Sets selected task to and empty object if create task button is clicked while in task details to hide details component
+    setSelectedTask({});
 
     // Add task to tasks array
     setTasks([...tasks, {
