@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const ProjectsList = (props) => {
-  const { projects, setSelectedProject, searchedProject } = props;
+  const { projects, setSelectedProject, searchedProject, setSearchedProject } = props;
   const [timer, setTimer] = useState(false);
   const theme = useTheme();
 
@@ -21,6 +21,11 @@ const ProjectsList = (props) => {
       }, 1500);
     }
   }, [searchedProject, timer])
+
+  const handleProjectSelection = (project) => {
+    setSelectedProject(project);
+    setSearchedProject("");
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -40,10 +45,9 @@ const ProjectsList = (props) => {
                 sx={{
                   "&:hover" : { backgroundColor: theme.palette.secondary.light, border: "none" }, 
                   // Highlights searched project
-                  // TODO Replace lightgreen with theme color 
-                  backgroundColor: project.name === searchedProject && timer ? "lightgreen" : "none"
+                  backgroundColor: project?.name === searchedProject && timer ? theme.palette.success.main : "none"
                 }}
-                onClick={() => setSelectedProject(project)}
+                onClick={() => handleProjectSelection(project)}
               >
                 <TableCell><Typography>{project?.name}</Typography></TableCell>
                 <TableCell><Typography>{(project?.description) ? `${project.description}` : "No project description available."}</Typography></TableCell>
@@ -55,7 +59,7 @@ const ProjectsList = (props) => {
               <TableRow 
                 key={project?.id || index} 
                 sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light }}}
-                onClick={() => setSelectedProject(project)}
+                onClick={() => handleProjectSelection(project)}
               >
                 <TableCell><Typography>{project?.name}</Typography></TableCell>
                 <TableCell><Typography>{(project?.description) ? `${project.description}` : "No project description available."}</Typography></TableCell>
