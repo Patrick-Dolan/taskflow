@@ -6,7 +6,6 @@ import ProjectsList from "./ProjectsList";
 import ProjectDetails from "./ProjectDetails";
 import { v4 as uuid } from "uuid";
 
-
 const Projects = () => {
   const [projects, setProjects] = useState([
     {
@@ -52,7 +51,7 @@ const Projects = () => {
     },
   ]);
   const [selectedProject, setSelectedProject] = useState({});
-  const [searchedProject, setSearchedProject] = useState(null);
+  const [searchedProject, setSearchedProject] = useState("");
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
 
   const handleProjectCreateOpen = () => {
@@ -79,6 +78,7 @@ const Projects = () => {
           projects={projects} 
           setSelectedProject={setSelectedProject} 
           searchedProject={searchedProject}
+          setSearchedProject={setSearchedProject}
         />
       )}
       <ProjectCreateDialog
