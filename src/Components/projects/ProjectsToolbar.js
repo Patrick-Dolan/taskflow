@@ -35,7 +35,7 @@ const ProjectsToolbar = (props) => {
                 variant="outlined"
               />
             )}
-            onChange={(event, value) => setSearchedProject(value)}
+            onInputChange={(event, value) => setSearchedProject(value)}
           />
           <Button variant="outlined" onClick={handleCreateProjectDialogBox}>Create Project</Button>
         </Box>

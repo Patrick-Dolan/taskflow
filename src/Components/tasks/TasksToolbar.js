@@ -25,6 +25,7 @@ const TasksToolbar = (props) => {
             getOptionLabel={(option) => option}
             inputValue={searchedTask || ""}
             size="small"
+            clearOnBlur
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -34,7 +35,7 @@ const TasksToolbar = (props) => {
                 variant="outlined"
               />
             )}
-            onChange={(event, value) => setSearchedTask(value)}
+            onInputChange={(event, value) => setSearchedTask(value)}
           />
           <Button variant="outlined" size="large" onClick={handleTaskCreateOpen}>Create task</Button>
         </Box>
