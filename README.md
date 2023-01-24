@@ -12,6 +12,7 @@
 * Context API
 * React DnD
 * Firebase
+* Dayjs
 
 ## Description
 
