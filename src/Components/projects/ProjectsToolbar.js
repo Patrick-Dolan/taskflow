@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 const ProjectsToolbar = (props) => {
-  const { handleCreateProjectDialogBox, projects, setSearchedProject } = props;
+  const { handleCreateProjectDialogBox, projects, searchedProject, setSearchedProject } = props;
 
   const projectNames = projects.map((e) => (e.name));
 
@@ -25,6 +25,7 @@ const ProjectsToolbar = (props) => {
             getOptionLabel={(option) => option}
             size="small"
             clearOnBlur
+            inputValue={searchedProject}
             renderInput={(params) => (
               <TextField
                 {...params}
