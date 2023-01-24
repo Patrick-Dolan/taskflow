@@ -23,12 +23,12 @@ const TaskEditDialog = (props) => {
   const [editedTaskDescription, setEditedTaskDescription] = useState(task?.description);
   const [error, setError] = useState(false);
   const [dueDate, setDueDate] = useState((task?.dueDateAssigned) ? (task.dueDate) : (dayjs()));
-  const [dueDateAssigned, setDueDateAssigned] = useState((task?.dueDateAssigned) ? (task.dueDateAssigned) : false);
+  const [dueDateAssigned, setDueDateAssigned] = useState((task.dueDateAssigned === true) ? (task.dueDateAssigned) : false);
 
   const handleClose = () => {
     setError(false);
     setOpen(false);
-    (task?.dueDateAssigned) ? setDueDateAssigned(task.dueDateAssigned) : setDueDateAssigned(false);
+    (task.dueDateAssigned === true) ? setDueDateAssigned(task.dueDateAssigned) : setDueDateAssigned(false);
   };
 
   const handleUpdateTask = () => {
