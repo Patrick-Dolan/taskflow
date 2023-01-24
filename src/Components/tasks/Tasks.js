@@ -123,6 +123,8 @@ const Tasks = () => {
       {(selectedTask?.id) ? (
         <TaskDetails
           task={selectedTask}
+          tasks={tasks}
+          setTasks={setTasks}
           setSelectedTask={setSelectedTask}
         />
         ) : (
