@@ -154,7 +154,7 @@ const TasksList = (props) => {
               >
                 <TableCell><Typography variant="body2">{task?.name}</Typography></TableCell>
                 <TableCell><Typography variant="body2">{(task?.description) ? `${task.description.slice(0, 50).trim()}...` : "No task description available."}</Typography></TableCell>
-                <TableCell align="right"><Typography variant="body2">{(task?.dueDate) ? `${task.dueDate.format("MM-DD-YY")}` : "No due date."}</Typography></TableCell>
+                <TableCell align="right"><Typography variant="body2">{(task?.dueDateAssigned) ? `${task.dueDate.format("MM-DD-YY")}` : "No due date."}</Typography></TableCell>
               </TableRow>
             ))
           )}
