@@ -44,7 +44,8 @@ const TaskCreateDialog = (props) => {
       name: taskName.trim(),
       description: taskDescription.trim(),
       dueDate: dueDate,
-      dueDateAssigned: dueDateAssigned
+      dueDateAssigned: dueDateAssigned,
+      taskCompleted: false
     }])
 
     // Close task create dialog box and reset create task state
