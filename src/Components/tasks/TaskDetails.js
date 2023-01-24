@@ -1,11 +1,18 @@
 import { Box } from "@mui/system";
 import { Button, Typography } from "@mui/material";
+import { useState } from "react";
+import TaskEditDialog from "./TaskEditDialog";
 
 const TaskDetails = (props) => {
-  const { task, setSelectedTask } = props;
+  const { task, tasks, setTasks, setSelectedTask } = props;
+  const [openTaskEdit, setOpenTaskEdit] = useState(false);
 
   const handleGoBackClick = () => {
     setSelectedTask({});
+  }
+
+  const handleEditEditOpen = () => {
+    setOpenTaskEdit(true);
   }
 
   return (
@@ -19,7 +26,7 @@ const TaskDetails = (props) => {
       >
         <Button variant="contained" onClick={() => setSelectedTask({})}>Go Back</Button>
         <Box>
-          <Button variant="contained" onClick={handleGoBackClick} sx={{marginRight: ".5em"}}>Edit</Button>
+          <Button variant="contained" onClick={handleEditEditOpen} sx={{marginRight: ".5em"}}>Edit</Button>
           <Button variant="contained" onClick={handleGoBackClick}>Delete</Button>
         </Box>
       </Box>
@@ -32,6 +39,14 @@ const TaskDetails = (props) => {
       <Typography variant="caption">Assigned to:</Typography>
       {/* TODO: set up assignment system */}
       <Typography>{(task?.assignedTo) ? `FEATURE NOT IMPLEMENTED YET` : "FEATURE NOT IMPLEMENTED YET"}</Typography>
+      <TaskEditDialog 
+        open={openTaskEdit}
+        setOpen={setOpenTaskEdit}
+        task={task}
+        tasks={tasks}
+        setTasks={setTasks}
+        setSelectedTask={setSelectedTask}
+      />
     </>
   )
 }
