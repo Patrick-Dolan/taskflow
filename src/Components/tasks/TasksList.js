@@ -16,6 +16,8 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PendingIcon from '@mui/icons-material/Pending';
 import { useTheme } from "@emotion/react";
 import { useState, useEffect } from "react";
 
@@ -117,6 +119,7 @@ const TasksList = (props) => {
       <Table size="small" aria-label="Tasks list">
         <TableHead>
           <TableRow>
+            <TableCell align="center"><Typography>Status</Typography></TableCell>
             <TableCell><Typography>Task</Typography></TableCell>
             <TableCell><Typography>Description</Typography></TableCell>
             <TableCell align="right"><Typography>Due date</Typography></TableCell>
@@ -131,11 +134,13 @@ const TasksList = (props) => {
               // TODO replace key/id with Firebase id 
               <TableRow 
                 key={task?.id || index} 
-                sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light, border: "none" },
-                backgroundColor: task?.name === searchedTask && timer ? theme.palette.success.main : "none"
-              }}
+                sx={{
+                  boxShadow: task?.name === searchedTask && timer ? `inset 5px 0px ${theme.palette.success.main}` : "none"
+                }}
+                hover={true}
                 onClick={() => handleTaskSelection(task)}
               >
+                <TableCell align="center">{(task?.taskCompleted) ? <CheckCircleIcon color="success" /> : <PendingIcon sx={{color: theme.palette.secondary.main}} />}</TableCell>
                 <TableCell><Typography variant="body2">{task?.name}</Typography></TableCell>
                 <TableCell><Typography variant="body2">{(task?.description) ? `${task.description.slice(0, 50).trim()}...` : "No task description available."}</Typography></TableCell>
                 <TableCell align="right"><Typography variant="body2">{(task?.dueDate) ? `${task.dueDate.format("MM-DD-YY")}` : "No due date."}</Typography></TableCell>
@@ -149,9 +154,10 @@ const TasksList = (props) => {
               // TODO replace key/id with Firebase id 
               <TableRow 
                 key={task?.id || index} 
-                sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light }}}
                 onClick={() => handleTaskSelection(task)}
+                hover={true}
               >
+                <TableCell align="center">{(task?.taskCompleted) ? <CheckCircleIcon color="success" /> : <PendingIcon sx={{color: theme.palette.secondary.main}} />}</TableCell>
                 <TableCell><Typography variant="body2">{task?.name}</Typography></TableCell>
                 <TableCell><Typography variant="body2">{(task?.description) ? `${task.description.slice(0, 50).trim()}...` : "No task description available."}</Typography></TableCell>
                 <TableCell align="right"><Typography variant="body2">{(task?.dueDateAssigned) ? `${task.dueDate.format("MM-DD-YY")}` : "No due date."}</Typography></TableCell>
