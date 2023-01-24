@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import dayjs from 'dayjs';
-import UndoIcon from '@mui/icons-material/Undo';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -116,7 +116,7 @@ const TaskEditDialog = (props) => {
                         sx={{height: "75%", marginRight: ".25em"}}
                         onClick={() => setDueDateAssigned(false)}
                       >
-                        <UndoIcon />
+                        <DeleteIcon />
                       </IconButton>
                       <DesktopDatePicker
                         label="Due Date"
