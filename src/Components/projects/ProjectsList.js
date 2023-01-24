@@ -45,7 +45,7 @@ const ProjectsList = (props) => {
                 sx={{
                   "&:hover" : { backgroundColor: theme.palette.secondary.light, border: "none" }, 
                   // Highlights searched project
-                  backgroundColor: project?.name === searchedProject && timer ? theme.palette.success.main : "none"
+                  boxShadow: project?.name === searchedProject && timer ? `inset 5px 0px ${theme.palette.success.main}` : "none"
                 }}
                 onClick={() => handleProjectSelection(project)}
               >
