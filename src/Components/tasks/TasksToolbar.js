@@ -2,7 +2,8 @@ import { Autocomplete, Box, Button, Divider, TextField, Typography } from "@mui/
 import { useState } from "react";
 
 
-const TasksToolbar = () => {
+const TasksToolbar = (props) => {
+  const { handleTaskCreateOpen } = props;
   const [searchedTask, setSearchedTask] = useState(null);
   const tempTasks = ["Task 1", "Task 2", "Task 3", "Task 4"];
 
@@ -41,7 +42,7 @@ const TasksToolbar = () => {
             )}
             onChange={(event, value) => setSearchedTask(value)}
           />
-          <Button variant="outlined" size="large" onClick={() => alert("Create clicked")}>Create task</Button>
+          <Button variant="outlined" size="large" onClick={handleTaskCreateOpen}>Create task</Button>
         </Box>
       </Box>
       <Divider />
