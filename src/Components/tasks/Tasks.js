@@ -5,7 +5,7 @@ import { useState } from "react";
 import TasksList from "./TasksList";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
-import { Button } from "@mui/material";
+import TaskDetails from "./TaskDetails";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([
@@ -82,38 +82,43 @@ const Tasks = () => {
   ]);
   const [openTaskCreate, setOpenTaskCreate] = useState(false);
   const [searchedTask, setSearchedTask] = useState("");
+  const [selectedTask, setSelectedTask] = useState({});
+
 
   const handleTaskCreateOpen = () => {
     setOpenTaskCreate(true);
   }
 
-  const handleSearchClear = () => {
-    setSearchedTask(null);
-  }
-
   console.log(tasks)
-  console.log(searchedTask)
 
   return (
     <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
-      <Button variant="outlined" onClick={handleSearchClear}>Clear search</Button>
       <TasksToolbar 
         tasks={tasks}
         searchedTask={searchedTask}
         setSearchedTask={setSearchedTask}
         handleTaskCreateOpen={handleTaskCreateOpen}
       />
-      <TasksList 
-        tasks={tasks}
-        searchedTask={searchedTask}
-      />
+      {(selectedTask?.id) ? (
+        <TaskDetails
+          task={selectedTask}
+          setSelectedTask={setSelectedTask}
+        />
+        ) : (
+        <TasksList 
+          tasks={tasks}
+          searchedTask={searchedTask}
+          setSearchedTask={setSearchedTask}
+          setSelectedTask={setSelectedTask}
+        />
+      )}
       <TaskCreateDialog
         open={openTaskCreate}
         setOpen={setOpenTaskCreate}
         tasks={tasks}
         setTasks={setTasks}
         handleTaskCreateOpen={handleTaskCreateOpen}
-        // setSelectedProject={setSelectedProject}
+        setSelectedTask={setSelectedTask}
       />
     </Container>
   )
