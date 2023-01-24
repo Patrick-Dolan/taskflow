@@ -1,13 +1,8 @@
 import { Autocomplete, Box, Button, Divider, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-
 
 const TasksToolbar = (props) => {
-  const { handleTaskCreateOpen } = props;
-  const [searchedTask, setSearchedTask] = useState(null);
-  const tempTasks = ["Task 1", "Task 2", "Task 3", "Task 4"];
-
-  console.log(searchedTask)
+  const { tasks, handleTaskCreateOpen, searchedTask, setSearchedTask } = props;
+  const taskNames = tasks.map((e) => (e.name));
 
   return (
     <>
@@ -25,10 +20,10 @@ const TasksToolbar = (props) => {
             alignItems: "center"
           }}
         >
-          {/* TODO setup search functionality */}
           <Autocomplete
-            options={tempTasks}
+            options={taskNames}
             getOptionLabel={(option) => option}
+            inputValue={searchedTask}
             size="small"
             clearOnBlur
             renderInput={(params) => (
