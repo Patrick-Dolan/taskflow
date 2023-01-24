@@ -45,7 +45,7 @@ const TasksList = (props) => {
                 sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light, border: "none" },
                 backgroundColor: task?.name === searchedTask && timer ? theme.palette.success.main : "none"
               }}
-                // onClick={() => handleTaskSelection(task)}
+                onClick={() => handleTaskSelection(task)}
               >
                 <TableCell><Typography variant="body2">{task?.name}</Typography></TableCell>
                 <TableCell><Typography variant="body2">{(task?.description) ? `${task.description.slice(0, 50).trim()}...` : "No task description available."}</Typography></TableCell>
@@ -58,7 +58,7 @@ const TasksList = (props) => {
               <TableRow 
                 key={task?.id || index} 
                 sx={{"&:hover" : { backgroundColor: theme.palette.secondary.light }}}
-                // onClick={() => handleTaskSelection(task)}
+                onClick={() => handleTaskSelection(task)}
               >
                 <TableCell><Typography variant="body2">{task?.name}</Typography></TableCell>
                 <TableCell><Typography variant="body2">{(task?.description) ? `${task.description.slice(0, 50).trim()}...` : "No task description available."}</Typography></TableCell>
