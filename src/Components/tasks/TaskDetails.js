@@ -2,10 +2,12 @@ import { Box } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import TaskEditDialog from "./TaskEditDialog";
+import TaskDeleteDialog from "./TaskDeleteDialog";
 
 const TaskDetails = (props) => {
   const { task, tasks, setTasks, setSelectedTask } = props;
   const [openTaskEdit, setOpenTaskEdit] = useState(false);
+  const [openTaskDelete, setOpenTaskDelete] = useState(false);
 
   const handleGoBackClick = () => {
     setSelectedTask({});
@@ -13,6 +15,10 @@ const TaskDetails = (props) => {
 
   const handleEditEditOpen = () => {
     setOpenTaskEdit(true);
+  }
+
+  const handleTaskDeleteOpen = () => {
+    setOpenTaskDelete(true);
   }
 
   return (
@@ -24,10 +30,10 @@ const TaskDetails = (props) => {
         marginBottom: "1em",
       }}
       >
-        <Button variant="contained" onClick={() => setSelectedTask({})}>Go Back</Button>
+        <Button variant="contained" onClick={handleGoBackClick}>Go Back</Button>
         <Box>
           <Button variant="contained" onClick={handleEditEditOpen} sx={{marginRight: ".5em"}}>Edit</Button>
-          <Button variant="contained" onClick={handleGoBackClick}>Delete</Button>
+          <Button variant="contained" onClick={handleTaskDeleteOpen}>Delete</Button>
         </Box>
       </Box>
       <Typography variant="caption">Task</Typography>
@@ -42,6 +48,14 @@ const TaskDetails = (props) => {
       <TaskEditDialog 
         open={openTaskEdit}
         setOpen={setOpenTaskEdit}
+        task={task}
+        tasks={tasks}
+        setTasks={setTasks}
+        setSelectedTask={setSelectedTask}
+      />
+      <TaskDeleteDialog 
+        open={openTaskDelete}
+        setOpen={setOpenTaskDelete}
         task={task}
         tasks={tasks}
         setTasks={setTasks}
