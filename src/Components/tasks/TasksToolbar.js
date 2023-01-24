@@ -23,9 +23,8 @@ const TasksToolbar = (props) => {
           <Autocomplete
             options={taskNames}
             getOptionLabel={(option) => option}
-            inputValue={searchedTask}
+            inputValue={searchedTask || ""}
             size="small"
-            clearOnBlur
             renderInput={(params) => (
               <TextField
                 {...params}
