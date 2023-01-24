@@ -38,6 +38,8 @@ const TaskDetails = (props) => {
       </Box>
       <Typography variant="caption">Task</Typography>
       <Typography variant="h5">{task?.name}</Typography>
+      <Typography variant="caption">Status</Typography>
+      <Typography variant="h5">{(task?.taskCompleted) ? ("Task completed") : ("Task unfinished")}</Typography>
       <Typography variant="caption">Description</Typography>
       <Typography>{(task?.description) ? `${task.description}` : "No description available."}</Typography>
       <Typography variant="caption">Due date</Typography>
