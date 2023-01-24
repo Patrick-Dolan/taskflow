@@ -78,7 +78,28 @@ const Tasks = () => {
       description: "Make any final adjustments to the cosplay and prepare it for wear.",
       dueDate: dayjs("2023-08-01"),
       dueDateAssigned: true
-    }
+    },
+    {
+      id: uuid(),
+      name: "Something",
+      description: "Construct the cosplay, including sewing, sculpting, and painting.",
+      dueDate: dayjs("2023-06-01"),
+      dueDateAssigned: true
+    },
+    {
+      id: uuid(),
+      name: "Another",
+      description: "Create any necessary accessories for the cosplay, such as weapons or jewelry.",
+      dueDate: dayjs("2023-07-15"),
+      dueDateAssigned: true
+    },
+    {
+      id: uuid(),
+      name: "More Touches",
+      description: "Make any final adjustments to the cosplay and prepare it for wear.",
+      dueDate: dayjs("2023-08-01"),
+      dueDateAssigned: true
+    },
   ]);
   const [openTaskCreate, setOpenTaskCreate] = useState(false);
   const [searchedTask, setSearchedTask] = useState("");
