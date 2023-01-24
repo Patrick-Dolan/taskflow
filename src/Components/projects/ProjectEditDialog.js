@@ -77,10 +77,6 @@ const ProjectEditDialog = (props) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Edit {(project?.name) ? (`${project.name}`) : ("Project")}
             </Typography>
-            {/* TODO decide if I will use save button and its functionality */}
-            {/* <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button> */}
           </Toolbar>
         </AppBar>
         <Container maxWidth="md">
