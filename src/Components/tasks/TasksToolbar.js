@@ -25,7 +25,6 @@ const TasksToolbar = (props) => {
             getOptionLabel={(option) => option}
             inputValue={searchedTask || ""}
             size="small"
-            clearOnBlur
             renderInput={(params) => (
               <TextField
                 {...params}

@@ -24,7 +24,6 @@ const ProjectsToolbar = (props) => {
             options={projectNames}
             getOptionLabel={(option) => option}
             size="small"
-            clearOnBlur
             inputValue={searchedProject}
             renderInput={(params) => (
               <TextField
