@@ -28,10 +28,12 @@ const UserAuthDialog = (props) => {
 
   const { open, setOpen, type, toggleLoginSignup } = props;
   const { signIn, registerUser } = UserAuth();
+
+  // Log in state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Register State
+  // Register state
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerPasswordConfirmation, setRegisterPasswordConfirmation] = useState("");
@@ -49,10 +51,24 @@ const UserAuthDialog = (props) => {
     setPasswordErrorMessage("");
   }
 
+  const clearFields = () => {
+    setLoginEmail("");
+    setLoginPassword("");
+    setRegisterEmail("");
+    setRegisterPassword("");
+    setRegisterPasswordConfirmation("");
+  }
+
   const handleUserAuthDialogClose = () => {
     clearErrors();
     setOpen(false);
   };
+
+  const handleToggleLoginSignup = () => {
+    clearErrors();
+    clearFields();
+    toggleLoginSignup();
+  }
 
   const passwordsDifferent = () => {
     if (registerPassword !== registerPasswordConfirmation) {
@@ -84,7 +100,6 @@ const UserAuthDialog = (props) => {
         setPasswordError(true);
         setPasswordErrorMessage("Password must be at least 6 characters long.")
       } else {
-        console.log("Register User Error: ", e.code);
         console.log("Register User Error: ", e.message);
       }
     }
@@ -92,11 +107,22 @@ const UserAuthDialog = (props) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    clearErrors();
+
     try {
       await signIn(loginEmail, loginPassword);
       handleUserAuthDialogClose();
     } catch (e) {
-      console.log("Sign in User Error: ", e.message);
+      if (e.code === "auth/user-not-found") {
+        setEmailError(true);
+        setEmailErrorMessage("Email not found.");
+      }
+      if (e.code === "auth/wrong-password") {
+        setPasswordError(true);
+        setPasswordErrorMessage("The password you have entered is incorrect.")
+      } else {
+        console.log("Sign in User Error: ", e.message);
+      }
     }
   }
 
@@ -108,6 +134,7 @@ const UserAuthDialog = (props) => {
           <form onSubmit={handleRegisterAccount}>
             <TextField
               autoFocus
+              value={registerEmail}
               margin="dense"
               label="Email Address"
               type="email"
@@ -121,6 +148,7 @@ const UserAuthDialog = (props) => {
               margin="dense"
               label="Password"
               type="password"
+              value={registerPassword}
               fullWidth
               variant="outlined"
               error={passwordError}
@@ -131,6 +159,7 @@ const UserAuthDialog = (props) => {
               margin="dense"
               label="Confirm Password"
               type="password"
+              value={registerPasswordConfirmation}
               fullWidth
               variant="outlined"
               error={passwordError}
@@ -156,35 +185,43 @@ const UserAuthDialog = (props) => {
       <Dialog open={open} onClose={handleUserAuthDialogClose}>
         <Typography variant="h4" sx={{textAlign: "center", padding: "1em 0 0 0"}}>Log in</Typography>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-            required
-            onChange={(e) => setLoginEmail(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            required
-            onChange={(e) => setLoginPassword(e.target.value)}
-          />
-          <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={handleUserAuthDialogClose} to={`/PasswordRecovery`}>
-            <Typography variant="caption">Forgot password?</Typography>
-          </Link>
-          <Box
-            sx={{margin: "1.5em 0"}}
-          >
-            <Button fullWidth size="large" onClick={handleLogin} variant="contained">Log in</Button>
-          </Box>
+          <form onSubmit={handleLogin}>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Email Address"
+              type="email"
+              value={loginEmail}
+              fullWidth
+              variant="outlined"
+              error={emailError}
+              helperText={(emailError) ? `${emailErrorMessage}` : ""}
+              required
+              onChange={(e) => setLoginEmail(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Password"
+              type="password"
+              value={loginPassword}
+              fullWidth
+              variant="outlined"
+              error={passwordError}
+              helperText={(passwordError) ? `${passwordErrorMessage}` : ""}
+              required
+              onChange={(e) => setLoginPassword(e.target.value)}
+            />
+            <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={handleUserAuthDialogClose} to={`/PasswordRecovery`}>
+              <Typography variant="caption">Forgot password?</Typography>
+            </Link>
+            <Box
+              sx={{margin: "1.5em 0"}}
+            >
+              <Button fullWidth type="submit" size="large" variant="contained">Log in</Button>
+            </Box>
+          </form>
           <Typography variant="caption">Don't have an account yet? </Typography>
-          <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={toggleLoginSignup}>
+          <Link style={{textDecorationColor: "grey", color: "grey"}} onClick={handleToggleLoginSignup}>
             <Typography variant="caption">Register here!</Typography>
           </Link>
         </DialogContent>
