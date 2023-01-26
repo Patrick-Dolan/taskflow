@@ -35,7 +35,6 @@ const TasksToolbar = (props) => {
               />
             )}
             onInputChange={(event, value) => setSearchedTask(value)}
-            isOptionEqualToValue={true}
           />
           <Button variant="outlined" size="large" onClick={handleTaskCreateOpen}>Create task</Button>
         </Box>
