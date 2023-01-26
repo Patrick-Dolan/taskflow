@@ -61,6 +61,7 @@ const UserAuthDialog = (props) => {
 
   const handleUserAuthDialogClose = () => {
     clearErrors();
+    clearFields();
     setOpen(false);
   };
 
