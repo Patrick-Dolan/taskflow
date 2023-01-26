@@ -21,6 +21,24 @@ const TaskDetails = (props) => {
     setOpenTaskDelete(true);
   }
 
+  const handleTaskCompletedUpdate = (taskStatus) => {
+    // Set local task to completed to update component then build new completedTask object
+    task.taskCompleted = taskStatus;
+
+    const completedTask = {
+      ...task,
+      taskCompleted: taskStatus
+    }
+
+    // filter out old uncompleted task then update tasks state with new completed task
+    const filteredTasks = tasks.filter((t) => t.id !== task.id);
+
+    setTasks([
+      ...filteredTasks,
+      completedTask
+    ]);
+  }
+
   return (
     <>
       <Box sx={{
@@ -47,6 +65,27 @@ const TaskDetails = (props) => {
       <Typography variant="caption">Assigned to:</Typography>
       {/* TODO: set up assignment system */}
       <Typography>{(task?.assignedTo) ? `FEATURE NOT IMPLEMENTED YET` : "FEATURE NOT IMPLEMENTED YET"}</Typography>
+      <Box
+        sx={{
+          marginTop: "2em"
+        }}
+      >
+        {(task.taskCompleted) ? (
+          <Button
+          variant="contained"
+          onClick={() => handleTaskCompletedUpdate(false)}
+          >
+            Mark task as unfinished
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() => handleTaskCompletedUpdate(true)}
+          >
+            Mark task as completed
+          </Button>
+        )}
+      </Box>
       <TaskEditDialog 
         open={openTaskEdit}
         setOpen={setOpenTaskEdit}
