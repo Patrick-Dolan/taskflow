@@ -7,6 +7,8 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { UserAuth } from '../../Contexts/AuthContext';
 import { useState } from 'react';
+import { usernameAvailable, updateUserDBEntry, updateUserAuthProfile } from '../../FirebaseFunctions';
+
 
 const UserAuthDialog = (props) => {
 
@@ -35,6 +37,9 @@ const UserAuthDialog = (props) => {
 
   // Register state
   const [registerEmail, setRegisterEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerPasswordConfirmation, setRegisterPasswordConfirmation] = useState("");
 
@@ -49,6 +54,8 @@ const UserAuthDialog = (props) => {
     setEmailErrorMessage("");
     setPasswordError(false);
     setPasswordErrorMessage("");
+    setUsernameError(false);
+    setUsernameErrorMessage("");
   }
 
   const clearFields = () => {
@@ -57,6 +64,7 @@ const UserAuthDialog = (props) => {
     setRegisterEmail("");
     setRegisterPassword("");
     setRegisterPasswordConfirmation("");
+    setUsername("");
   }
 
   const handleUserAuthDialogClose = () => {
@@ -69,6 +77,20 @@ const UserAuthDialog = (props) => {
     clearErrors();
     clearFields();
     toggleLoginSignup();
+  }
+
+  const handleUsername = async (name) => {
+    setUsername(name);
+    if (name.length !== 0) {
+      const available = await usernameAvailable(name);
+      if (!available) {
+        setUsernameError(true);
+        setUsernameErrorMessage("Username is not available.")
+      } else {
+        setUsernameError(false);
+      } 
+      console.log("username available: ", available)
+    }
   }
 
   const passwordsDifferent = () => {
@@ -89,8 +111,18 @@ const UserAuthDialog = (props) => {
       return;
     }
 
+    const userDetails = {
+      displayName: username,
+      displayNameControl: username.toLowerCase()
+    }
+
     try {
-      await registerUser(registerEmail, registerPassword);
+      // Register user with auth
+      const newUserCredentials = await registerUser(registerEmail, registerPassword);
+      // Add user to database 
+      await updateUserDBEntry(newUserCredentials.user, userDetails);
+      // Update user auth profile with data
+      await updateUserAuthProfile(newUserCredentials.user, userDetails.displayName);
       handleUserAuthDialogClose();
     } catch (e) {
       if (e.code === "auth/invalid-email") {
@@ -144,7 +176,20 @@ const UserAuthDialog = (props) => {
               error={emailError}
               helperText={(emailError) ? `${emailErrorMessage}` : ""}
               onChange={(e) => setRegisterEmail(e.target.value)}
-              />
+            />
+            <TextField
+              autoFocus
+              value={username}
+              margin="dense"
+              label="Username"
+              type="text"
+              fullWidth
+              variant="outlined"
+              error={usernameError}
+              helperText={(username.length === 0) ? "" : (usernameError) ? `${usernameErrorMessage}` : "Username is available"}
+              required
+              onChange={(e) => handleUsername(e.target.value)}
+            />
             <TextField
               margin="dense"
               label="Password"
@@ -155,7 +200,7 @@ const UserAuthDialog = (props) => {
               error={passwordError}
               required
               onChange={(e) => setRegisterPassword(e.target.value)}
-              />
+            />
             <TextField
               margin="dense"
               label="Confirm Password"
