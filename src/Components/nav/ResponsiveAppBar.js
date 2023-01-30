@@ -80,7 +80,7 @@ const ResponsiveAppBar = (props) => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{marginBottom: ".5em"}}>
         <Container maxWidth="md">
           <Toolbar disableGutters>
             <TaskAltIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

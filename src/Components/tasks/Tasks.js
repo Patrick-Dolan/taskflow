@@ -124,7 +124,7 @@ const Tasks = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
+    <Container maxWidth="md">
       <TasksToolbar 
         tasks={tasks}
         searchedTask={searchedTask}

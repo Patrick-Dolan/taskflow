@@ -59,7 +59,7 @@ const Projects = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{marginTop: "1.5em"}}>
+    <Container maxWidth="md">
       <ProjectsToolbar 
         handleCreateProjectDialogBox={handleProjectCreateOpen} 
         projects={projects} 
