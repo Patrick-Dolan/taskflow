@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Divider, Grid, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Button, Divider, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
