@@ -9,7 +9,6 @@ import { UserAuth } from '../../Contexts/AuthContext';
 import { useState } from 'react';
 import { usernameAvailable, updateUserDBEntry, updateUserAuthProfile } from '../../FirebaseFunctions';
 
-
 const UserAuthDialog = (props) => {
 
   // ===========================================================================================
@@ -161,7 +160,7 @@ const UserAuthDialog = (props) => {
 
   if (type === "Sign up") {
     return (
-      <Dialog open={open} onClose={handleUserAuthDialogClose}>
+      <Dialog open={open} onClose={handleUserAuthDialogClose} maxWidth="xs">
         <Typography variant="h4" sx={{textAlign: "center", padding: "1em 0 0 0"}}>Sign up</Typography>
         <DialogContent>
           <form onSubmit={handleRegisterAccount}>
@@ -178,7 +177,6 @@ const UserAuthDialog = (props) => {
               onChange={(e) => setRegisterEmail(e.target.value)}
             />
             <TextField
-              autoFocus
               value={username}
               margin="dense"
               label="Username"
@@ -228,7 +226,7 @@ const UserAuthDialog = (props) => {
     );
   } else if (type === "Log in") {
     return (
-      <Dialog open={open} onClose={handleUserAuthDialogClose}>
+      <Dialog open={open} onClose={handleUserAuthDialogClose} maxWidth="xs">
         <Typography variant="h4" sx={{textAlign: "center", padding: "1em 0 0 0"}}>Log in</Typography>
         <DialogContent>
           <form onSubmit={handleLogin}>
