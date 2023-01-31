@@ -43,10 +43,10 @@ const ProjectsList = (props) => {
             </TableHead>
           ) : null }
           <TableBody>
-            {(searchedProject) 
-              ? (projects?.sort((a, b) => a.name === searchedProject ? -1 : b.name === searchedProject ? 1 : 0))
-              : (projects?.sort((a, b) => a.name.localeCompare(b.name)))
-              .map((project, index) => (
+            {(searchedProject
+                ? projects?.sort((a, b) => a.name === searchedProject ? -1 : b.name === searchedProject ? 1 : 0)
+                : projects?.sort((a, b) => a.name.localeCompare(b.name))
+              ).map((project, index) => (
                 // TODO replace key/id with Firebase id 
                 <TableRow 
                   key={project?.id || index} 
