@@ -92,7 +92,7 @@ const Account = () => {
           </List>
         </Grid>
         <Grid item xs={12} sm={8} md={8} >
-          {(showDetails) ? <AccountDetails /> : null}
+          {(showDetails) ? <AccountDetails user={user} /> : null}
           {(showContacts) ? <Contacts /> : null}
           {(showSettings) ? <AccountSettings /> : null}
         </Grid>
