@@ -135,7 +135,6 @@ const TasksList = (props) => {
             ).map((task, index) => (
             <Box key={task?.id || index}>
               <ListItem
-                hover={true}
                 onClick={() => handleTaskSelection(task)}
               >
                 <ListItemButton>
