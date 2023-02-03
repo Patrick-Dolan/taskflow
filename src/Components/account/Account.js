@@ -8,6 +8,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AccountDetails from "./AccountDetails";
 import AccountSettings from "./AccountSettings";
 import Contacts from "./Contacts";
+import AccountEdit from "./AccountEdit";
 
 const Account = () => {
   const auth = UserAuth();
@@ -15,29 +16,41 @@ const Account = () => {
   const [showDetails, setShowDetails] = useState(true);
   const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAccountEdit, setShowAccountEdit] = useState(false);
   console.log("User in account: ", user)
 
   const clearConditionalWindowState = () => {
-    setShowDetails(false)
-    setShowContacts(false)
-    setShowSettings(false)
+    setShowDetails(false);
+    setShowContacts(false);
+    setShowSettings(false);
+    setShowAccountEdit(false);
   }
 
   const handleDetailsClick = () => {
     clearConditionalWindowState();
     setShowDetails(true);
   }
-
+  
   const handleContactsClick = () => {
     clearConditionalWindowState();
     setShowContacts(true);
   }
-
+  
   const handleSettingsClick = () => {
     clearConditionalWindowState();
     setShowSettings(true);
   }
-
+  
+  const handleAccountEditClick = () => {
+    if(showAccountEdit) {
+      clearConditionalWindowState();
+      setShowAccountEdit(false);
+      setShowDetails(true);
+    } else {
+      clearConditionalWindowState();
+      setShowAccountEdit(true);
+    }
+  }
 
   return (
     <Container maxWidth="md">
@@ -92,9 +105,10 @@ const Account = () => {
           </List>
         </Grid>
         <Grid item xs={12} sm={8} md={8} >
-          {(showDetails) ? <AccountDetails user={user} /> : null}
+          {(showDetails) ? <AccountDetails user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
           {(showContacts) ? <Contacts /> : null}
           {(showSettings) ? <AccountSettings /> : null}
+          {(showAccountEdit) ? <AccountEdit user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
         </Grid>
       </Grid>
     </Container>
