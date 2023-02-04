@@ -19,7 +19,7 @@ export const theme = createTheme({
     },
     success: {
       main: '#26c72c',
-      light: '#51D256',
+      light: '#91EF94',
       dark: '#1A8B1E'
     },
   }
