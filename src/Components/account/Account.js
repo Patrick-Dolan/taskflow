@@ -107,7 +107,7 @@ const Account = () => {
           {(showDetails) ? <AccountDetails user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
           {(showContacts) ? <Contacts /> : null}
           {(showSettings) ? <AccountSettings /> : null}
-          {(showAccountEdit) ? <AccountEdit user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
+          {(showAccountEdit) ? <AccountEdit handleAccountEditClick={handleAccountEditClick} /> : null}
         </Grid>
       </Grid>
     </Container>
