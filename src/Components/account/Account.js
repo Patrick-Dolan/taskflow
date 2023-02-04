@@ -17,7 +17,6 @@ const Account = () => {
   const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAccountEdit, setShowAccountEdit] = useState(false);
-  console.log("User in account: ", user)
 
   const clearConditionalWindowState = () => {
     setShowDetails(false);
@@ -55,7 +54,7 @@ const Account = () => {
   return (
     <Container maxWidth="md">
       <Grid container spacing={2}>
-        <Grid container direction="column" alignItems="center" justifyContent="center" item xs={12} sm={4} md={4}>
+        <Grid container direction="column" item xs={12} sm={4} md={4}>
           <Box
             style={{
               display: "flex", 
@@ -70,7 +69,7 @@ const Account = () => {
               }}
             />
           </Box>
-          <Typography variant="h5" sx={{marginTop: ".25em"}}>{user.displayName ? user.displayName : "No display name"}</Typography>
+          <Typography variant="h5" sx={{margin: ".25em auto 0 auto"}}>{user.displayName ? user.displayName : "No display name"}</Typography>
           <List sx={{width: "100%"}}>
             <ListItem>
               <ListItemButton onClick={handleDetailsClick}>
