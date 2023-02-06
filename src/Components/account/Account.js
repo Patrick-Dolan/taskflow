@@ -59,55 +59,57 @@ const Account = () => {
     <Container maxWidth="md">
       <Grid container spacing={2}>
         <Grid container direction="column" item xs={12} sm={4} md={4}>
-          <Box
-            style={{
-              display: "flex", 
-              justifyContent: "center",
-              marginTop: "1em"
-            }}
-          >
-            <Avatar
-              sx={{
-                minHeight: "8em",
-                minWidth: "8em",
-              }}
-            />
-          </Box>
-          <Typography variant="h5" sx={{margin: ".25em auto 0 auto"}}>{user.displayName ? `@${user.displayName}` : "No display name"}</Typography>
           {(!mobileScreenSize) 
             ? (
-              <List sx={{width: "100%"}}>
-                <ListItem>
-                  <ListItemButton onClick={handleDetailsClick}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <PersonIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={"Account"} />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton onClick={handleContactsClick}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <PeopleAltIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={"Contacts"} />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton onClick={handleSettingsClick}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <SettingsIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={"Settings"} />
-                  </ListItemButton>
-                </ListItem>
-              </List>
+              <>
+                <Box
+                  style={{
+                    display: "flex", 
+                    justifyContent: "center",
+                    marginTop: "1em"
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      minHeight: "8em",
+                      minWidth: "8em",
+                    }}
+                  />
+                </Box>
+                <Typography variant="h5" sx={{margin: ".25em auto 0 auto"}}>{user.displayName ? `@${user.displayName}` : "No display name"}</Typography>
+                <List sx={{width: "100%"}}>
+                  <ListItem>
+                    <ListItemButton onClick={handleDetailsClick}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={"Account"} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton onClick={handleContactsClick}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <PeopleAltIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={"Contacts"} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton onClick={handleSettingsClick}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <SettingsIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={"Settings"} />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </>
             )
             : (null)
           }
