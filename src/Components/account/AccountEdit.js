@@ -1,16 +1,21 @@
 import { useTheme } from "@emotion/react";
 import { Button, Typography, TextField, Divider, Paper, Snackbar, Alert } from "@mui/material"
 import { Box, Container } from "@mui/system";
+import { EmailAuthProvider } from "firebase/auth";
 import { useState } from "react";
 import { UserAuth } from "../../Contexts/AuthContext";
 
 const AccountEdit = (props) => {
   const { handleAccountEditClick } = props;
   const theme = useTheme();
-  const { updateUserEmail } = UserAuth();
-  const [emailUpdateError, setEmailUpdateError] = useState(false);
+  const { user, updateUserEmail, updateUserPassword, confirmUserAuth } = UserAuth();
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailUpdateError, setEmailUpdateError] = useState(false);
+  const [passwordUpdateError, setPasswordUpdateError] = useState(false);
   const [newEmail, setNewEmail] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -19,7 +24,7 @@ const AccountEdit = (props) => {
     setEmailUpdateError(false);
     setErrorMessage("");
 
-    if (newEmail.trim() !== confirmEmail.trim()) {
+    if (newEmail !== confirmEmail) {
       setEmailUpdateError(true);
       setErrorMessage("Email and confirm email do not match.");
       return false; 
@@ -34,12 +39,36 @@ const AccountEdit = (props) => {
     return true;
   }
 
+  const passwordValidationPassed = async () => {
+    setPasswordUpdateError(false);
+    setErrorMessage("");
+    
+    if (newPassword !== newPasswordConfirm) {
+      setPasswordUpdateError(true);
+      setErrorMessage("New passwords do not match.");
+      return false; 
+    }
+    
+    try {
+      const credentials = EmailAuthProvider.credential(user.email, oldPassword);
+      await confirmUserAuth(credentials);
+    } catch(e) {
+      setPasswordUpdateError(true);
+      switch (e.message) {
+        case "Firebase: Error (auth/wrong-password).":
+          setErrorMessage("Old password incorrect.");
+          break;
+        default:
+          setErrorMessage(e.message);
+      }
+    }
+    return true;
+  }
+
   const handleEmailUpdateSubmit = async (e) => {
     e.preventDefault();
 
-    if (!emailValidationPassed()) {
-      return
-    }
+    if (!emailValidationPassed()) { return }
 
     try {
       await updateUserEmail(newEmail);
@@ -48,13 +77,42 @@ const AccountEdit = (props) => {
       setNewEmail("");
       setConfirmEmail("");
     } catch (e) {
-      console.log(e)
       setEmailUpdateError(true);
-      if (e.message === "Firebase: Error (auth/invalid-email).") {
-        setErrorMessage("Email address is invalid.");
+      switch (e.message) {
+        case "Firebase: Error (auth/invalid-email).":
+          setErrorMessage("Email address is invalid.");
+          break;
+        case "Firebase: Error (auth/email-already-in-use).":
+          setErrorMessage("Email address is already in use by another user.");
+          break;
+        default: 
+        setErrorMessage(e.message);
       }
-      if (e.message === "Firebase: Error (auth/email-already-in-use).") {
-        setErrorMessage("Email address is already in use by another user.");
+    }
+  }
+
+  const handlePasswordUpdateSubmit = async (e) => {
+    e.preventDefault();
+
+    const passwordValidated = await passwordValidationPassed();
+
+    if (!passwordValidated) { return }
+
+    try {
+      await updateUserPassword(newPassword);
+      setSnackbarOpen(true);
+      setSnackbarMessage("Password updated.")
+      setOldPassword("");
+      setNewPassword("");
+      setNewPasswordConfirm("");
+    } catch (e) {
+      setPasswordUpdateError(true);
+      switch (e.message) {
+        case "Firebase: Password should be at least 6 characters (auth/weak-password).":
+          setErrorMessage("Password should be at least 6 characters long.");
+          break;
+        default:
+          setErrorMessage(e.message);
       }
     }
   }
@@ -78,7 +136,7 @@ const AccountEdit = (props) => {
         >Back</Button>
       </Box>
       <Divider sx={{marginBottom: "1em"}} />
-      <Paper variant="outlined">
+      <Paper variant="outlined" sx={{marginBottom: "1em"}}>
         <Container sx={{padding: "1em 0"}}>
           <form onSubmit={handleEmailUpdateSubmit}>
             <Typography variant="body2">Update email:</Typography>
@@ -103,13 +161,55 @@ const AccountEdit = (props) => {
               fullWidth
               size="small"
             />
-            <Button type="submit" variant="contained">Update email</Button>
+            <Button type="submit" variant="contained">Change email</Button>
+          </form>
+        </Container>
+      </Paper>
+      <Paper variant="outlined">
+        <Container sx={{padding: "1em 0"}}>
+          <form onSubmit={handlePasswordUpdateSubmit}>
+            <Typography variant="body2">Update password:</Typography>
+            <TextField
+              type="password"
+              label="Old password*"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              margin="normal"
+              error={passwordUpdateError}
+              required
+              fullWidth
+              size="small"
+              />
+            <TextField
+              type="password"
+              label="New password*"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              margin="normal"
+              error={passwordUpdateError}
+              required
+              fullWidth
+              size="small"
+              />
+            <TextField
+              type="password"
+              label="Confirm new password*"
+              value={newPasswordConfirm}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+              margin="normal"
+              error={passwordUpdateError}
+              helperText={(passwordUpdateError) ? `${errorMessage}` : ""}
+              required
+              fullWidth
+              size="small"
+            />
+            <Button type="submit" variant="contained">Change password</Button>
           </form>
         </Container>
       </Paper>
       <Snackbar
         open={snackbarOpen} 
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
       >
         <Alert 
