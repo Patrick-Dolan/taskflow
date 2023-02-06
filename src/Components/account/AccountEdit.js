@@ -12,14 +12,15 @@ const AccountEdit = (props) => {
   const [emailUpdateError, setEmailUpdateError] = useState(false);
   const [passwordUpdateError, setPasswordUpdateError] = useState(false);
   const [newEmail, setNewEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [currentPasswordForEmailUpdate, setCurrentPasswordForEmailUpdate] = useState("");
+  const [currentPasswordForPasswordUpdate, setCurrentPasswordForPasswordUpdate] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   
-  const emailValidationPassed = () => {
+  const emailValidationPassed = async () => {
     setEmailUpdateError(false);
     setErrorMessage("");
 
@@ -35,6 +36,20 @@ const AccountEdit = (props) => {
       return false;
     } 
 
+    try {
+      await confirmUserAuth(currentPasswordForEmailUpdate);
+    } catch(e) {
+      setEmailUpdateError(true);
+      switch (e.message) {
+        case "Firebase: Error (auth/wrong-password).":
+          setErrorMessage("Current password incorrect.");
+          break;
+        default:
+          setErrorMessage(e.message);
+      }
+      return false;
+    }
+
     return true;
   }
 
@@ -48,23 +63,24 @@ const AccountEdit = (props) => {
       return false; 
     }
     
-    if (newPassword === newPasswordConfirm && newPassword === currentPassword) {
+    if (newPassword === newPasswordConfirm && newPassword === currentPasswordForPasswordUpdate) {
       setPasswordUpdateError(true);
       setErrorMessage("New password cannot be the same as the current password. Please choose a new password.");
       return false; 
     }
     
     try {
-      await confirmUserAuth(currentPassword);
+      await confirmUserAuth(currentPasswordForPasswordUpdate);
     } catch(e) {
       setPasswordUpdateError(true);
       switch (e.message) {
         case "Firebase: Error (auth/wrong-password).":
-          setErrorMessage("Old password incorrect.");
+          setErrorMessage("Current password incorrect.");
           break;
         default:
           setErrorMessage(e.message);
       }
+      return false;
     }
     return true;
   }
@@ -72,12 +88,15 @@ const AccountEdit = (props) => {
   const handleEmailUpdateSubmit = async (e) => {
     e.preventDefault();
 
-    if (!emailValidationPassed()) { return }
+    const emailFormValidated = await emailValidationPassed();
+
+    if (!emailFormValidated) { return }
 
     try {
       await updateUserEmail(newEmail);
       setSnackbarOpen(true);
-      setSnackbarMessage("Email updated.")
+      setSnackbarMessage("Email updated.");
+      setCurrentPasswordForEmailUpdate("");
       setNewEmail("");
       setConfirmEmail("");
     } catch (e) {
@@ -106,7 +125,7 @@ const AccountEdit = (props) => {
       await updateUserPassword(newPassword);
       setSnackbarOpen(true);
       setSnackbarMessage("Password updated.")
-      setCurrentPassword("");
+      setCurrentPasswordForPasswordUpdate("");
       setNewPassword("");
       setNewPasswordConfirm("");
     } catch (e) {
@@ -145,11 +164,22 @@ const AccountEdit = (props) => {
           <form onSubmit={handleEmailUpdateSubmit}>
             <Typography variant="body2">Update email:</Typography>
             <TextField
+              type="password"
+              label="Current password*"
+              value={currentPasswordForEmailUpdate}
+              onChange={(e) => setCurrentPasswordForEmailUpdate(e.target.value)}
+              margin="dense"
+              error={emailUpdateError}
+              required
+              fullWidth
+              size="small"
+            />
+            <TextField
               type="email"
               label="New email*"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              margin="normal"
+              margin="dense"
               error={emailUpdateError}
               fullWidth
               size="small"
@@ -159,13 +189,13 @@ const AccountEdit = (props) => {
               label="Confirm email*"
               value={confirmEmail}
               onChange={(e) => setConfirmEmail(e.target.value)}
-              margin="normal"
+              margin="dense"
               error={emailUpdateError}
               helperText={(emailUpdateError) ? `${errorMessage}` : ""}
               fullWidth
               size="small"
             />
-            <Button type="submit" variant="contained">Change email</Button>
+            <Button type="submit" variant="contained" sx={{marginTop: ".5em"}}>Change email</Button>
           </form>
         </Container>
       </Paper>
@@ -176,9 +206,9 @@ const AccountEdit = (props) => {
             <TextField
               type="password"
               label="Current password*"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              margin="normal"
+              value={currentPasswordForPasswordUpdate}
+              onChange={(e) => setCurrentPasswordForPasswordUpdate(e.target.value)}
+              margin="dense"
               error={passwordUpdateError}
               required
               fullWidth
@@ -189,7 +219,7 @@ const AccountEdit = (props) => {
               label="New password*"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              margin="normal"
+              margin="dense"
               error={passwordUpdateError}
               required
               fullWidth
@@ -200,14 +230,14 @@ const AccountEdit = (props) => {
               label="Confirm new password*"
               value={newPasswordConfirm}
               onChange={(e) => setNewPasswordConfirm(e.target.value)}
-              margin="normal"
+              margin="dense"
               error={passwordUpdateError}
               helperText={(passwordUpdateError) ? `${errorMessage}` : ""}
               required
               fullWidth
               size="small"
             />
-            <Button type="submit" variant="contained">Change password</Button>
+            <Button type="submit" variant="contained" sx={{marginTop: ".5em"}}>Change password</Button>
           </form>
         </Container>
       </Paper>
