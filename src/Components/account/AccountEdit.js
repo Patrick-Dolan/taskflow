@@ -1,19 +1,18 @@
 import { useTheme } from "@emotion/react";
 import { Button, Typography, TextField, Divider, Paper, Snackbar, Alert } from "@mui/material"
 import { Box, Container } from "@mui/system";
-import { EmailAuthProvider } from "firebase/auth";
 import { useState } from "react";
 import { UserAuth } from "../../Contexts/AuthContext";
 
 const AccountEdit = (props) => {
   const { handleAccountEditClick } = props;
   const theme = useTheme();
-  const { user, updateUserEmail, updateUserPassword, confirmUserAuth } = UserAuth();
+  const { updateUserEmail, updateUserPassword, confirmUserAuth } = UserAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const [emailUpdateError, setEmailUpdateError] = useState(false);
   const [passwordUpdateError, setPasswordUpdateError] = useState(false);
   const [newEmail, setNewEmail] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
@@ -49,9 +48,14 @@ const AccountEdit = (props) => {
       return false; 
     }
     
+    if (newPassword === newPasswordConfirm && newPassword === currentPassword) {
+      setPasswordUpdateError(true);
+      setErrorMessage("New password cannot be the same as the current password. Please choose a new password.");
+      return false; 
+    }
+    
     try {
-      const credentials = EmailAuthProvider.credential(user.email, oldPassword);
-      await confirmUserAuth(credentials);
+      await confirmUserAuth(currentPassword);
     } catch(e) {
       setPasswordUpdateError(true);
       switch (e.message) {
@@ -102,7 +106,7 @@ const AccountEdit = (props) => {
       await updateUserPassword(newPassword);
       setSnackbarOpen(true);
       setSnackbarMessage("Password updated.")
-      setOldPassword("");
+      setCurrentPassword("");
       setNewPassword("");
       setNewPasswordConfirm("");
     } catch (e) {
@@ -171,9 +175,9 @@ const AccountEdit = (props) => {
             <Typography variant="body2">Update password:</Typography>
             <TextField
               type="password"
-              label="Old password*"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
+              label="Current password*"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
               margin="normal"
               error={passwordUpdateError}
               required
