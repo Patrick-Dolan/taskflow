@@ -46,7 +46,7 @@ const AccountDetails = (props) => {
             <Typography variant="subtitle2">Password:</Typography>
           </Grid>
           <Grid item xs={12} sm={9} md={9} lg={9}>
-            <Typography variant="body1">{user.password ? user.password : "No first name available."}</Typography>
+            <Typography variant="body1">********</Typography>
           </Grid>
         </Grid>
       </Grid>
