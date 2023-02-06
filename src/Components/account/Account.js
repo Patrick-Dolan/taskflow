@@ -1,5 +1,5 @@
 import { Container, Box } from "@mui/system";
-import { Typography, Avatar, List, ListItem, ListItemAvatar, Grid, ListItemText, ListItemButton } from "@mui/material";
+import { Typography, Avatar, List, ListItem, ListItemAvatar, Grid, ListItemText, ListItemButton, useMediaQuery, BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { UserAuth } from "../../Contexts/AuthContext";
 import { useState } from "react";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -9,15 +9,18 @@ import AccountDetails from "./AccountDetails";
 import AccountSettings from "./AccountSettings";
 import Contacts from "./Contacts";
 import AccountEdit from "./AccountEdit";
+import { useTheme } from "@emotion/react";
 
 const Account = () => {
   const auth = UserAuth();
   const { user } = auth;
+  const theme = useTheme();
   const [showDetails, setShowDetails] = useState(true);
   const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAccountEdit, setShowAccountEdit] = useState(false);
-
+  const mobileScreenSize = useMediaQuery(theme.breakpoints.down("sm"));
+  
   const clearConditionalWindowState = () => {
     setShowDetails(false);
     setShowContacts(false);
@@ -69,47 +72,66 @@ const Account = () => {
               }}
             />
           </Box>
-          <Typography variant="h5" sx={{margin: ".25em auto 0 auto"}}>{user.displayName ? user.displayName : "No display name"}</Typography>
-          <List sx={{width: "100%"}}>
-            <ListItem>
-              <ListItemButton onClick={handleDetailsClick}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={"My Account"} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton onClick={handleContactsClick}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PeopleAltIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={"Contacts"} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton onClick={handleSettingsClick}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <SettingsIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={"Settings"} />
-              </ListItemButton>
-            </ListItem>
-          </List>
+          <Typography variant="h5" sx={{margin: ".25em auto 0 auto"}}>{user.displayName ? `@${user.displayName}` : "No display name"}</Typography>
+          {(!mobileScreenSize) 
+            ? (
+              <List sx={{width: "100%"}}>
+                <ListItem>
+                  <ListItemButton onClick={handleDetailsClick}>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <PersonIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={"Account"} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton onClick={handleContactsClick}>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <PeopleAltIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={"Contacts"} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton onClick={handleSettingsClick}>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <SettingsIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={"Settings"} />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            )
+            : (null)
+          }
         </Grid>
-        <Grid item xs={12} sm={8} md={8} >
+        <Grid item xs={12} sm={8} md={8} sx={{paddingBottom: {xs: "5em"}}} elevation={1}>
           {(showDetails) ? <AccountDetails user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
           {(showContacts) ? <Contacts /> : null}
           {(showSettings) ? <AccountSettings /> : null}
           {(showAccountEdit) ? <AccountEdit handleAccountEditClick={handleAccountEditClick} /> : null}
         </Grid>
       </Grid>
+      {(mobileScreenSize) 
+        ? (
+          <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={5}>
+            <BottomNavigation
+              showLabels
+            >
+              <BottomNavigationAction label="Account" icon={<PersonIcon />} onClick={handleDetailsClick} />
+              <BottomNavigationAction label="Contacts" icon={<PeopleAltIcon />} onClick={handleContactsClick} />
+              <BottomNavigationAction label="Settings" icon={<SettingsIcon />} onClick={handleSettingsClick} />
+            </BottomNavigation>
+          </Paper>
+        )
+        : (null)
+      }
     </Container>
   )
 }
