@@ -15,6 +15,7 @@ const Account = () => {
   const auth = UserAuth();
   const { user } = auth;
   const theme = useTheme();
+  const [bottomNavValue, setBottomNavValue] = useState(0);
   const [showDetails, setShowDetails] = useState(true);
   const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -123,6 +124,10 @@ const Account = () => {
           <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={5}>
             <BottomNavigation
               showLabels
+              value={bottomNavValue}
+              onChange={(event, newValue) => {
+                setBottomNavValue(newValue);
+              }}
             >
               <BottomNavigationAction label="Account" icon={<PersonIcon />} onClick={handleDetailsClick} />
               <BottomNavigationAction label="Contacts" icon={<PeopleAltIcon />} onClick={handleContactsClick} />
