@@ -4,6 +4,7 @@ import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { UserAuth } from "../../Contexts/AuthContext";
 import { updateUserAuthProfile, updateUserDBEntry, usernameAvailable } from "../../FirebaseFunctions";
+import AccountDeleteForm from "./AccountDeleteForm";
 
 const AccountEdit = (props) => {
   const { user, handleAccountEditClick } = props;
@@ -342,6 +343,11 @@ const AccountEdit = (props) => {
             />
             <Button type="submit" variant="contained" sx={{marginTop: ".5em"}}>Change password</Button>
           </form>
+        </Container>
+      </Paper>
+      <Paper variant="outlined" sx={{marginBottom: "1em"}}>
+        <Container sx={{padding: "1em 0"}}>
+          <AccountDeleteForm />
         </Container>
       </Paper>
       <Snackbar
