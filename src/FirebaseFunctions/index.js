@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { doc, collection, where, getDocs, setDoc, serverTimestamp, query } from "firebase/firestore";
+import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
 // ================= Firebase Auth Functions =================
@@ -34,6 +34,12 @@ export const updateUserDBEntry = async (user, userDetails) => {
     createdAt: user.createdAt || serverTimestamp()
   }
   await setDoc(docRef, payload, { merge: true });
+}
+
+// Delete user firestore entry
+// TODO When tasks, project, etc... are added to user delete subcollections then user otherwise subcollections arent deleted by firebase.
+export const deleteUserFirestoreEntry = async (userId) => {
+  await deleteDoc(doc(db, "users", userId));
 }
 
 // Retrieve usernames to check for availability
