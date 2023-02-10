@@ -347,7 +347,9 @@ const AccountEdit = (props) => {
       </Paper>
       <Paper variant="outlined" sx={{marginBottom: "1em"}}>
         <Container sx={{padding: "1em 0"}}>
-          <AccountDeleteForm />
+          <AccountDeleteForm
+            user={user}
+          />
         </Container>
       </Paper>
       <Snackbar
