@@ -1,6 +1,6 @@
 import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from "@mui/material";
 import { useState } from "react";
-import { UserAuth } from "../../Contexts/AuthContext";
+import { UserAuth } from "../../../Contexts/AuthContext";
 
 const AccountDeleteForm = () => {
   const [open, setOpen] = useState(false);

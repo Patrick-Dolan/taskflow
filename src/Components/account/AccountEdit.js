@@ -4,7 +4,7 @@ import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { UserAuth } from "../../Contexts/AuthContext";
 import { updateUserAuthProfile, updateUserDBEntry, usernameAvailable } from "../../FirebaseFunctions";
-import AccountDeleteForm from "./AccountDeleteForm";
+import AccountDeleteForm from "./forms/AccountDeleteForm";
 
 const AccountEdit = (props) => {
   const { user, handleAccountEditClick } = props;
