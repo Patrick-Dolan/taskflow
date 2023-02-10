@@ -1,8 +1,10 @@
 import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from "@mui/material";
 import { useState } from "react";
 import { UserAuth } from "../../../Contexts/AuthContext";
+import { deleteUserFirestoreEntry } from "../../../FirebaseFunctions";
 
-const AccountDeleteForm = () => {
+const AccountDeleteForm = (props) => {
+  const { user } = props;
   const [open, setOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -23,7 +25,11 @@ const AccountDeleteForm = () => {
     setPasswordError(false);
 
     try {
+      // Confirm authentication
       await confirmUserAuth(currentPassword);
+      // Delete user firestore entry
+      await deleteUserFirestoreEntry(user.uid);
+      // Delete user from authorization
       await deleteUserFromAuth();
     } catch (e) {
       setPasswordError(true);
