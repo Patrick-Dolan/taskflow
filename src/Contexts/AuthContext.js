@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, EmailAuthProvider, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateEmail, reauthenticateWithCredential, updatePassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, EmailAuthProvider, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateEmail, reauthenticateWithCredential, updatePassword, deleteUser } from "firebase/auth"
 import { auth } from "../firebase"
 
 export const UserContext = createContext();
@@ -48,8 +48,12 @@ export const AuthProvider = ({children}) => {
     return reauthenticateWithCredential(user, credentials);
   }
 
+  const deleteUserFromAuth = async () => {
+    return deleteUser(user);
+  }
+
   return (
-    <UserContext.Provider value={{user, setUser, registerUser, passwordResetEmail, signIn, logout, updateUserEmail, updateUserPassword, confirmUserAuth}}>
+    <UserContext.Provider value={{user, setUser, registerUser, passwordResetEmail, signIn, logout, updateUserEmail, updateUserPassword, confirmUserAuth, deleteUserFromAuth}}>
       {children}
     </UserContext.Provider>
   )
