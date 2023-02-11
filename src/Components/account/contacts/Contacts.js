@@ -1,8 +1,12 @@
 import { Divider, Typography } from "@mui/material"
 import ContactsList from "./ContactsList";
 import { v4 as uuid } from "uuid";
+import { useState } from "react";
+import ContactDetails from "./ContactDetails";
 
 const Contacts = () => {
+  const [showContactDetails, setShowContactDetails] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
   const contacts = [
     {
       displayName: "BarkNessMonster",
@@ -42,13 +46,31 @@ const Contacts = () => {
     }
   ];
 
+  const handleContactSelection = (contact) => {
+    setSelectedContact(contact);
+    setShowContactDetails(true);
+  }
+
+  const handleGoBackToContactsList = () => {
+    setSelectedContact(null);
+    setShowContactDetails(false);
+  }
+
   return (
     <>
       <Typography variant="h4">Contacts</Typography>
       <Divider />
-      <ContactsList 
-        contacts={contacts}
-      />
+      {(showContactDetails) ? (
+        <ContactDetails 
+          contact={selectedContact}
+          goBackToContactsList={handleGoBackToContactsList}
+        />
+      ) : (
+        <ContactsList 
+          contacts={contacts}
+          selectContact={handleContactSelection}
+        />
+      )}
     </>
   )
 }
