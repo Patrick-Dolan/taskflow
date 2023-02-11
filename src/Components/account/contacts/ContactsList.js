@@ -1,7 +1,7 @@
 import { Avatar, List, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 
 const ContactsList = (props) => {
-  const { contacts } = props;
+  const { contacts, selectContact } = props;
 
   return(
     <> 
@@ -9,7 +9,7 @@ const ContactsList = (props) => {
       {contacts.map((contact) => (
         <ListItemButton
           key={contact.uid}
-          onClick={() => alert(contact.displayName)}
+          onClick={() => selectContact(contact)}
         >
           <ListItemAvatar>
             <Avatar alt={contact.displayName} src={contact.photoURL} />
