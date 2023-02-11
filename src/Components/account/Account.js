@@ -7,7 +7,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PersonIcon from '@mui/icons-material/Person';
 import AccountDetails from "./AccountDetails";
 import AccountSettings from "./AccountSettings";
-import Contacts from "./Contacts";
+import Contacts from "./contacts/Contacts";
 import AccountEdit from "./AccountEdit";
 import { useTheme } from "@emotion/react";
 
