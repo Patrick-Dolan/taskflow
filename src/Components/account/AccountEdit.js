@@ -1,10 +1,10 @@
 import { useTheme } from "@emotion/react";
 import { Button, Typography, TextField, Divider, Paper, Snackbar, Alert } from "@mui/material"
 import { Box, Container } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UserAuth } from "../../Contexts/AuthContext";
-import { updateUserAuthProfile, updateUserDBEntry, usernameAvailable } from "../../FirebaseFunctions";
 import AccountDeleteForm from "./forms/AccountDeleteForm";
+import AccountUsernameUpdateForm from "./forms/AccountUsernameUpdateForm";
 
 const AccountEdit = (props) => {
   const { user, handleAccountEditClick } = props;
@@ -24,36 +24,10 @@ const AccountEdit = (props) => {
   const [currentPasswordForPasswordUpdate, setCurrentPasswordForPasswordUpdate] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
-
-  // Username state
-  const [usernameUpdateError, setUsernameUpdateError] = useState(false);
-  const [usernameUpdateErrorMessage, setUsernameUpdateErrorMessage] = useState("");
-  const [newUsername, setNewUsername] = useState("");
-  const [usernameHelperText, setUsernameHelperText] = useState("");
   
   // Shared state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  
-
-  useEffect(() => {
-    const getUsernameHelperText = (username) => {
-      if (username.length === 0) {
-        setUsernameHelperText("");
-        return
-      }
-      if (username.length <= 3) {
-        setUsernameHelperText("Username must be at least 4 characters long.");
-        return
-      }
-      if (username.length >=4) {
-        setUsernameHelperText("Click change username button to change username.");
-        return
-      }
-    }
-
-    getUsernameHelperText(newUsername);
-  }, [newUsername]);
   
   const emailValidationPassed = async () => {
     setEmailUpdateError(false);
@@ -175,55 +149,6 @@ const AccountEdit = (props) => {
     }
   }
 
-  const usernameValidationPassed = (username) => {
-    if (username.length <= 3) {
-      setUsernameUpdateError(true);
-      setUsernameUpdateErrorMessage("Username must be more than 3 characters long.")
-      return false;
-    }
-    
-    if (username === user.displayName) {
-      setUsernameUpdateError(true);
-      setUsernameUpdateErrorMessage("Username can't be the same as current username.")
-      return false;
-    }
-
-    return true;
-  }
-
-  const handleUsernameUpdateSubmit = async (e) => {
-    e.preventDefault();
-
-    const usernameValidated = usernameValidationPassed(newUsername);
-
-    
-    if (usernameValidated) {
-      try {
-        const availableOnFirebase = await usernameAvailable(newUsername);
-        if (!availableOnFirebase) {
-          setUsernameUpdateError(true);
-          setUsernameUpdateErrorMessage("Username unavailable.");
-          return
-        }
-        const userDetails = {
-          displayName: newUsername,
-          displayNameControl: newUsername.toLowerCase()
-        }
-        // Update user database entry
-        await updateUserDBEntry(user, userDetails);
-      // Update user auth profile with new username data
-        await updateUserAuthProfile(user, userDetails.displayName);
-        setNewUsername("");
-        setSnackbarOpen(true);
-        setSnackbarMessage("Username updated.")
-      } catch (e) {
-        setUsernameUpdateError(true);
-        setUsernameUpdateErrorMessage(e.message);
-        console.log(e.message);
-      }
-    }
-  }
-
   return (
     <>
       <Divider><Typography variant="h4">Edit Account</Typography></Divider>
@@ -245,22 +170,11 @@ const AccountEdit = (props) => {
       <Divider sx={{marginBottom: "1em"}} />
       <Paper variant="outlined" sx={{marginBottom: "1em"}}>
         <Container sx={{padding: "1em 0"}}>
-          <form onSubmit={handleUsernameUpdateSubmit}>
-            <Typography variant="body2">Update username:</Typography>
-            <TextField
-              type="text"
-              label="New username"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              margin="dense"
-              error={usernameUpdateError}
-              helperText={(usernameUpdateError) ? usernameUpdateErrorMessage : usernameHelperText}
-              required
-              fullWidth
-              size="small"
-            />
-            <Button type="submit" variant="contained" sx={{marginTop: ".5em"}}>Change username</Button>
-          </form>
+          <AccountUsernameUpdateForm 
+            user={user}
+            setSnackbarOpen={setSnackbarOpen}
+            setSnackbarMessage={setSnackbarMessage}
+          />
         </Container>
       </Paper>
       <Paper variant="outlined" sx={{marginBottom: "1em"}}>
