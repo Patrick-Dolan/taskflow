@@ -6,19 +6,16 @@ import { updateProfile } from "firebase/auth";
 
 export const updateUserAuthProfile = async (user, newDisplayName, newPhotoURL) => {
   if (!newDisplayName && !newPhotoURL) {
-    console.log("Firebase function updateUserAuthProfile not given acceptable new profile information object.");
+    console.log("Firebase function updateUserAuthProfile not given both displayName and photoUrl.");
+    return
   }
+
   const info = {
     displayName: newDisplayName || null,
     photoURL: newPhotoURL || null
   }
-  updateProfile(user, info)
-    .then(() => {
-      console.log("Authentication profile updated successfully.");
-    })
-    .catch((e) => {
-      console.log("Auth profile update error: ", e.message);
-    });
+
+  await updateProfile(user, info);
 }
 
 // =================== Firestore Functions ===================
