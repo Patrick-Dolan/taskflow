@@ -1,12 +1,10 @@
-import { Divider, Typography } from "@mui/material"
 import ContactsList from "./ContactsList";
 import { v4 as uuid } from "uuid";
 import { useState } from "react";
 import ContactDetails from "./ContactDetails";
+import ContactsToolbar from "./ContactsToolbar";
 
 const Contacts = () => {
-  const [showContactDetails, setShowContactDetails] = useState(false);
-  const [selectedContact, setSelectedContact] = useState(null);
   const contacts = [
     {
       displayName: "BarkNessMonster",
@@ -45,6 +43,9 @@ const Contacts = () => {
       photoURL: "https://dummyimage.com/300x300/f032e6/fff?text=C"
     }
   ];
+  const [showContactDetails, setShowContactDetails] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [searchedContact, setSearchedContact] = useState("");
 
   const handleContactSelection = (contact) => {
     setSelectedContact(contact);
@@ -58,8 +59,11 @@ const Contacts = () => {
 
   return (
     <>
-      <Typography variant="h4">Contacts</Typography>
-      <Divider />
+      <ContactsToolbar 
+        contacts={contacts}
+        searchedContact={searchedContact}
+        setSearchedContact={setSearchedContact}
+      />
       {(showContactDetails) ? (
         <ContactDetails 
           contact={selectedContact}
@@ -68,6 +72,7 @@ const Contacts = () => {
       ) : (
         <ContactsList 
           contacts={contacts}
+          searchedContact={searchedContact}
           selectContact={handleContactSelection}
         />
       )}
