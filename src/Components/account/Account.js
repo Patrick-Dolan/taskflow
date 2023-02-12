@@ -58,8 +58,6 @@ const Account = () => {
     }
   }
 
-  console.log(bottomNavValue)
-
   return (
     <Container maxWidth="md">
       <Grid container spacing={2}>
