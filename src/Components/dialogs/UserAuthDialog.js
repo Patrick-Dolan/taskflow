@@ -112,7 +112,8 @@ const UserAuthDialog = (props) => {
 
     const userDetails = {
       displayName: username,
-      displayNameControl: username.toLowerCase()
+      displayNameControl: username.toLowerCase(),
+      email: registerEmail
     }
 
     try {
