@@ -31,16 +31,19 @@ const Account = () => {
 
   const handleDetailsClick = () => {
     clearConditionalWindowState();
+    setBottomNavValue(0);
     setShowDetails(true);
   }
   
   const handleContactsClick = () => {
     clearConditionalWindowState();
+    setBottomNavValue(1);
     setShowContacts(true);
   }
   
   const handleSettingsClick = () => {
     clearConditionalWindowState();
+    setBottomNavValue(2);
     setShowSettings(true);
   }
   
@@ -54,6 +57,8 @@ const Account = () => {
       setShowAccountEdit(true);
     }
   }
+
+  console.log(bottomNavValue)
 
   return (
     <Container maxWidth="md">
