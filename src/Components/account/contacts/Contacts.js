@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { useState } from "react";
 import ContactDetails from "./ContactDetails";
 import ContactsToolbar from "./ContactsToolbar";
+import ContactAddDialog from "../../dialogs/ContactAddDialog";
 
 const Contacts = () => {
   const contacts = [
@@ -46,6 +47,7 @@ const Contacts = () => {
   const [showContactDetails, setShowContactDetails] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [searchedContact, setSearchedContact] = useState("");
+  const [openAddContactDialog, setOpenAddContactDialog] = useState(false);
 
   const handleContactSelection = (contact) => {
     setSelectedContact(contact);
@@ -57,12 +59,17 @@ const Contacts = () => {
     setShowContactDetails(false);
   }
 
+  const handleOpenAddContactDialog = () => {
+    setOpenAddContactDialog(true);
+  }
+
   return (
     <>
       <ContactsToolbar 
         contacts={contacts}
         searchedContact={searchedContact}
         setSearchedContact={setSearchedContact}
+        openAddContactDialog={handleOpenAddContactDialog}
       />
       {(showContactDetails) ? (
         <ContactDetails 
@@ -76,6 +83,11 @@ const Contacts = () => {
           selectContact={handleContactSelection}
         />
       )}
+      <ContactAddDialog 
+        open={openAddContactDialog}
+        setOpen={setOpenAddContactDialog}
+        onClose={() => setOpenAddContactDialog(false)}
+      />
     </>
   )
 }
