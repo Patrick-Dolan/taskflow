@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 
 const ContactsToolbar = (props) => {
-  const { contacts, searchedContact, setSearchedContact } = props;
+  const { contacts, searchedContact, setSearchedContact, openAddContactDialog } = props;
   const theme = useTheme();
   const [showSearch, setShowSearch] = useState(false);
 
@@ -33,7 +33,7 @@ const ContactsToolbar = (props) => {
           <Grid container spacing="4">
             <Grid item>
               <Tooltip title="Add Contact" enterDelay={500} leaveDelay={200}>
-                <Button sx={buttonStyles} variant="contained" size="small" onClick={() => alert("Add button clicked")}><AddIcon /></Button>
+                <Button sx={buttonStyles} variant="contained" size="small" onClick={openAddContactDialog}><AddIcon /></Button>
               </Tooltip>
             </Grid>
             <Grid item>
