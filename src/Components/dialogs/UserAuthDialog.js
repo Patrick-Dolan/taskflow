@@ -110,15 +110,17 @@ const UserAuthDialog = (props) => {
       return;
     }
 
-    const userDetails = {
-      displayName: username,
-      displayNameControl: username.toLowerCase(),
-      email: registerEmail
-    }
-
+    
     try {
       // Register user with auth
       const newUserCredentials = await registerUser(registerEmail, registerPassword);
+      const userDetails = {
+        displayName: username,
+        displayNameControl: username.toLowerCase(),
+        email: registerEmail,
+        uid: newUserCredentials.user.uid,
+        contactRequests: []
+      }
       // Add user to database 
       await updateUserDBEntry(newUserCredentials.user, userDetails);
       // Update user auth profile with data
