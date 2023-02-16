@@ -69,14 +69,15 @@ const ContactAddDialog = (props) => {
           // TODO: Replace with snackbar and close dialog
           setUsernameHelperTextMessage("Contact request successful.")
           setUsernameCheckingProgress(false);
+        } else {
+          setUsernameCheckingProgress(false);
+          setUsernameError(true);
+          setUsernameErrorMessage("User does not exist.")
         }
       } catch (e) {
         setUsernameError(true);
         setUsernameErrorMessage(e.message);
       }
-      setUsernameCheckingProgress(false);
-      setUsernameError(true);
-      setUsernameErrorMessage("User does not exist.")
     }
   }
 
@@ -135,7 +136,7 @@ const ContactAddDialog = (props) => {
             </Grid>
           </Grid>
         </Box>
-        <Typography textAlign="center" variant="body2" sx={{padding: ".5em 0"}}>Or</Typography>
+        {/* <Typography textAlign="center" variant="body2" sx={{padding: ".5em 0"}}>Or</Typography>
         <Box
           sx={{
             padding: ".5em 0"
@@ -167,7 +168,7 @@ const ContactAddDialog = (props) => {
               </Button>
             </Grid>
           </Grid>
-        </Box>
+        </Box> */}
       </DialogContent>
       <DialogActions>
         <Button 
