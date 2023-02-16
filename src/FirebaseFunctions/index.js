@@ -56,3 +56,15 @@ export const usernameAvailable = async (newDisplayName) => {
 
   return (username !== newDisplayName.toLowerCase()) ? true : false;
 }
+
+export const getUserDetailsByUsername = async (searchedDisplayName) => {
+  const q = query(collection(db, "users"), where("displayNameControl", "==", searchedDisplayName.toLowerCase()));
+
+  const querySnapshot = await getDocs(q);
+  let user = {};
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    user = {...doc.data()};
+  });
+  return user;
+}
