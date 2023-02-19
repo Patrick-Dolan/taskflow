@@ -52,6 +52,12 @@ const ContactAddDialog = (props) => {
   const handleUsernameContactAdd = async () => {
     const validUsername = isUsernameValid();
 
+    if (username.toLowerCase().trim() === user.displayName.toLowerCase().trim()) {
+      setUsernameError(true);
+      setUsernameErrorMessage("You can't send a contact request to yourself.");
+      return
+    }
+
     if (validUsername) {
       setUsernameHelperTextMessage("Searching for user: ");
       setUsernameCheckingProgress(true);
@@ -97,6 +103,13 @@ const ContactAddDialog = (props) => {
     e.preventDefault();
     setEmailError(false);
     setEmailCheckingProgress(true);
+
+    if (email.toLowerCase().trim() === user.email.toLowerCase().trim()) {
+      setEmailCheckingProgress(false);
+      setEmailError(true);
+      setEmailErrorMessage("You can't send a contact request to yourself.");
+      return
+    }
 
     try {
       // Get requested recipients firestore data to add contact request
