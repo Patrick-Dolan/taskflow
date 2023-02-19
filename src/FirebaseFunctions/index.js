@@ -68,3 +68,15 @@ export const getUserDetailsByUsername = async (searchedDisplayName) => {
   });
   return user;
 }
+
+export const getUserDetailsByEmail = async (searchedEmail) => {
+  const q = query(collection(db, "users"), where("emailControl", "==", searchedEmail.toLowerCase()));
+
+  const querySnapshot = await getDocs(q);
+  let user = {};
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    user = {...doc.data()};
+  });
+  return user;
+}
