@@ -8,20 +8,31 @@ import DialogTitle from '@mui/material/DialogTitle';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useState } from 'react';
-import { getUserDetailsByUsername, updateUserDBEntry, usernameAvailable } from '../../FirebaseFunctions';
+import { getUserDetailsByEmail, getUserDetailsByUsername, updateUserDBEntry, usernameAvailable } from '../../FirebaseFunctions';
 import { UserAuth } from '../../Contexts/AuthContext';
 
 const ContactAddDialog = (props) => {
   const { open, setOpen } = props;
+  // Username state
   const { user } = UserAuth();
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [usernameCheckingProgress, setUsernameCheckingProgress] = useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
   const [usernameHelperTextMessage, setUsernameHelperTextMessage] = useState("Type in the username that you wish to add to your contacts.");
-
+  
+  // Email state
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailCheckingProgress, setEmailCheckingProgress] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [emailHelperTextMessage, setEmailHelperTextMessage] = useState("Type in the email that you wish to add to your contacts.");
+  
   const handleClose = () => {
     setUsername("");
+    setEmail("");
+    setEmailHelperTextMessage("Type in the username that you wish to add to your contacts.");
+    setEmailError(false);
     setUsernameHelperTextMessage("Type in the username that you wish to add to your contacts.");
     setUsernameError(false);
     setOpen(false);
@@ -51,8 +62,8 @@ const ContactAddDialog = (props) => {
           // Get requested recipients firestore data to add contact request
           const requestRecipient = await getUserDetailsByUsername(username);
           const newContactRequest = {
-            displayName: user.displayName,
-            email: user.email,
+            displayName: user.displayName.toLowerCase(),
+            email: user.email.toLowerCase(),
           }
           // Check if current user has already sent a contact request to requestRecipient
           if (requestRecipient.contactRequests.some(e => e.displayName.toLowerCase() === user.displayName.toLowerCase())) {
@@ -76,8 +87,50 @@ const ContactAddDialog = (props) => {
         }
       } catch (e) {
         setUsernameError(true);
+        setUsernameCheckingProgress(false);
         setUsernameErrorMessage(e.message);
       }
+    }
+  }
+
+  const handleEmailContactAdd = async (e) => {
+    e.preventDefault();
+    setEmailError(false);
+    setEmailCheckingProgress(true);
+
+    try {
+      // Get requested recipients firestore data to add contact request
+      const requestRecipient = await getUserDetailsByEmail(email);
+
+      if (requestRecipient?.uid) {
+        const newContactRequest = {
+          displayName: user.displayName.toLowerCase(),
+          email: user.email.toLowerCase(),
+        }
+        // Check if current user has already sent a contact request to requestRecipient
+        if (requestRecipient.contactRequests.some(e => e.displayName.toLowerCase() === user.displayName.toLowerCase())) {
+          setEmailCheckingProgress(false);
+          setEmailError(true);
+          setEmailErrorMessage("You have already sent a contact request to this user.");
+          return
+        }
+        const updatedRecipient = {
+          ...requestRecipient,
+          contactRequests: [...requestRecipient.contactRequests, newContactRequest]
+        }
+        await updateUserDBEntry(requestRecipient, updatedRecipient);
+        // TODO: Replace with snackbar and close dialog
+        setEmailCheckingProgress(false);
+        setEmailHelperTextMessage("Contact request successful.")
+      } else {
+        setEmailError(true);
+        setEmailCheckingProgress(false);
+        setEmailErrorMessage("Email doesn't exist.");
+      }
+    } catch (e) {
+      setEmailCheckingProgress(false);
+      setEmailError(true);
+      setEmailErrorMessage(e.message);
     }
   }
 
@@ -136,39 +189,53 @@ const ContactAddDialog = (props) => {
             </Grid>
           </Grid>
         </Box>
-        {/* <Typography textAlign="center" variant="body2" sx={{padding: ".5em 0"}}>Or</Typography>
+        <Typography textAlign="center" variant="body2" sx={{padding: ".5em 0"}}>Or</Typography>
         <Box
           sx={{
             padding: ".5em 0"
           }}
         >
-          <Grid container>
-            <Grid container item>
-              <TextField
-                label="Add by Email"
-                type="text"
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon />
-                  </InputAdornment>
-                  )
-                }}
-              />
+          <form onSubmit={handleEmailContactAdd}>
+            <Grid container>
+                <Grid container item>
+                  <TextField
+                    label="Add by Email"
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={emailError}
+                    helperText={(emailError) ? emailErrorMessage : emailHelperTextMessage}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon />
+                      </InputAdornment>
+                      )
+                    }}
+                  />
+                  {(emailCheckingProgress) 
+                    ? (
+                      <Box sx={{width: "100%"}}>
+                        <LinearProgress />
+                      </Box>
+                    )
+                    : null
+                  }
+                </Grid>
+                <Grid container item>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    sx={{marginTop: ".5em"}}
+                    fullWidth
+                  >
+                    Send contact request
+                  </Button>
+                </Grid>
             </Grid>
-            <Grid container item>
-              <Button
-                variant="contained"
-                onClick={() => alert("Email add clicked")}
-                sx={{marginTop: ".5em"}}
-                fullWidth
-              >
-                Send contact request
-              </Button>
-            </Grid>
-          </Grid>
-        </Box> */}
+          </form>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button 
