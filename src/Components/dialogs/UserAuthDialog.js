@@ -118,6 +118,7 @@ const UserAuthDialog = (props) => {
         displayName: username,
         displayNameControl: username.toLowerCase(),
         email: registerEmail,
+        emailControl: registerEmail.toLowerCase(),
         uid: newUserCredentials.user.uid,
         contactRequests: []
       }
