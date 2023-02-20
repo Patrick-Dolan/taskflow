@@ -15,10 +15,10 @@ import MenuItem from '@mui/material/MenuItem';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { UserAuth } from '../../Contexts/AuthContext';
 import UserAuthDialog from "../dialogs/UserAuthDialog";
-import { Snackbar } from '@mui/material';
+import { Badge, Snackbar } from '@mui/material';
 
 const pages = ["Home", "Projects", "Tasks"];
-const settings = ['Profile', 'Account', 'Settings'];
+const settings = ['Profile', 'Contacts', 'Account', 'Settings'];
 const UserAuthActions = ["Sign up", "Log in"];
 
 const ResponsiveAppBar = (props) => {
@@ -177,7 +177,15 @@ const ResponsiveAppBar = (props) => {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   {(user?.uid) ? (
-                    <Avatar alt={user?.email.toUpperCase()} src="/static/images/avatar/2.jpg" />
+                    <Badge
+                      badgeContent={user.contactRequests.length}
+                      color="secondary"
+                    >
+                      <Avatar 
+                        alt={user?.email.toUpperCase()} 
+                        src="/static/images/avatar/2.jpg" 
+                      />
+                    </Badge>
                   ) : (
                     <Avatar />
                   )}
@@ -202,13 +210,30 @@ const ResponsiveAppBar = (props) => {
                 {(user?.uid) ? (
                   <div>
                     {settings.map((setting) => (
-                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">
-                          <Link style={{textDecoration: "none", color: "#000000DE"}} to={`/${setting}`}>
-                            {setting}
-                          </Link>
-                        </Typography>
-                      </MenuItem>
+                      (setting === 'Contacts')
+                        ? (
+                          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                            <Badge
+                              color="secondary"
+                              variant="dot"
+                            >
+                              <Typography textAlign="center">
+                                <Link style={{textDecoration: "none", color: "#000000DE"}} to={`/${setting}`}>
+                                  {setting}
+                                </Link>
+                              </Typography>
+                            </Badge>
+                          </MenuItem>
+                        )
+                        : (
+                          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                            <Typography textAlign="center">
+                              <Link style={{textDecoration: "none", color: "#000000DE"}} to={`/${setting}`}>
+                                {setting}
+                              </Link>
+                            </Typography>
+                          </MenuItem>
+                        )
                     ))}
                     <MenuItem onClick={() => handleCloseUserMenu("Logout")}>
                       <Typography textAlign="center">Logout</Typography>
