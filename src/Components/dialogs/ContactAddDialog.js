@@ -119,6 +119,8 @@ const ContactAddDialog = (props) => {
         const newContactRequest = {
           displayName: user.displayName.toLowerCase(),
           email: user.email.toLowerCase(),
+          photoURL: user.photoURL,
+          uid: user.uid
         }
         // Check if current user has already sent a contact request to requestRecipient
         if (requestRecipient.contactRequests.some(e => e.displayName.toLowerCase() === user.displayName.toLowerCase())) {
