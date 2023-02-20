@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, EmailAuthProvider, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateEmail, reauthenticateWithCredential, updatePassword, deleteUser } from "firebase/auth"
 import { auth } from "../firebase"
+import { getUserDetailsByEmail } from "../FirebaseFunctions";
 
 export const UserContext = createContext();
 
@@ -10,8 +11,21 @@ export const AuthProvider = ({children}) => {
   console.log("Current User: ", user)
 
   useEffect(() => {
+    const getAndMergeUserData = async (currentUser) => {
+      const userDbData = await getUserDetailsByEmail(currentUser?.email);
+      const updatedUser = {
+        ...currentUser,
+        ...userDbData
+      };
+      setUser(updatedUser);
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser?.uid) {
+        getAndMergeUserData(currentUser);
+      } else {
+        setUser(currentUser);
+      }
     });
 
     return () => {
