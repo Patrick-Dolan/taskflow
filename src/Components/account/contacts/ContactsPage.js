@@ -5,8 +5,12 @@ import ContactDetails from "./ContactDetails";
 import ContactsToolbar from "./ContactsToolbar";
 import ContactAddDialog from "../../dialogs/ContactAddDialog";
 import { Container } from "@mui/system";
+import ContactRequests from "./ContactRequests";
+import { UserAuth } from "../../../Contexts/AuthContext";
 
 const ContactsPage = () => {
+  const { user } = UserAuth();
+
   const contacts = [
     {
       displayName: "BarkNessMonster",
@@ -78,11 +82,16 @@ const ContactsPage = () => {
           goBackToContactsList={handleGoBackToContactsList}
         />
       ) : (
-        <ContactsList 
-          contacts={contacts}
-          searchedContact={searchedContact}
-          selectContact={handleContactSelection}
-        />
+        <>
+          <ContactRequests 
+            user={user}
+          />
+          <ContactsList 
+            contacts={contacts}
+            searchedContact={searchedContact}
+            selectContact={handleContactSelection}
+          />
+        </>
       )}
       <ContactAddDialog 
         open={openAddContactDialog}
