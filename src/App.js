@@ -14,6 +14,7 @@ import Account from "./Components/account/Account";
 import Profile from "./Components/account/Profile";
 import PasswordRecovery from "./Components/account/PasswordRecovery";
 import ProtectedRoute from "./Components/account/ProtectedRoute";
+import ContactsPage from "./Components/account/contacts/ContactsPage";
 
 const App = () => {
   // Protect Routes snackbar state
@@ -40,6 +41,12 @@ const App = () => {
             <Route path="Tasks" element={
               <ProtectedRoute snackbarOpen={snackbarOpen} handleUnauthorizedAccess={handleUnauthorizedAccess}>
                 <Tasks />
+              </ProtectedRoute>
+              }
+            />
+            <Route path="Contacts" element={
+              <ProtectedRoute snackbarOpen={snackbarOpen} handleUnauthorizedAccess={handleUnauthorizedAccess}>
+                <ContactsPage />
               </ProtectedRoute>
               }
             />
