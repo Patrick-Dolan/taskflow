@@ -4,9 +4,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import { useTheme } from "@emotion/react";
+import { updateUserDBEntry } from "../../../FirebaseFunctions";
 
 const ContactRequests = (props) => {
-  const { user } = props;
+  const { user, setUser } = props;
   const theme = useTheme();
   const mobileScreenSize = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -14,12 +15,34 @@ const ContactRequests = (props) => {
     alert("Profile link clicked");
   }
 
-  const handleContactRequestAccept = () => {
-    alert("Request accept clicked");
-  }
-
   const handleContactRequestDeny = () => {
     alert("Request denied clicked");
+  }
+
+  const handleContactRequestAccept = async (contactToAdd) => {
+    // Filter out accepted contact request to remove it from list
+    const filteredContactRequests = user.contactRequests.filter(e => e.uid !== contactToAdd.uid);
+
+    const updatedUserDetails = {
+      contacts: (user.contacts.length > 0) ? [...user.contacts, contactToAdd] : [contactToAdd],
+      contactRequests: [...filteredContactRequests]
+    }
+
+    try {
+      await updateUserDBEntry(user, updatedUserDetails);
+      
+      // Update local user to refresh component state
+      const updatedUser = {
+        ...user,
+        ...updatedUserDetails
+      }
+      setUser(updatedUser);
+
+      // TODO set up snackbar for success and error
+      console.log("Contact added successfully.");
+    } catch(e) {
+      console.log(e.message);
+    }
   }
 
   return (
@@ -59,6 +82,7 @@ const ContactRequests = (props) => {
                               <Button
                                 variant="outlined"
                                 size="small"
+                                color="secondary"
                                 onClick={handleProfileLinkClick}
                               >
                                 <PersonIcon />
@@ -68,6 +92,7 @@ const ContactRequests = (props) => {
                               <Button
                                 variant="outlined"
                                 size="small"
+                                color="error"
                                 onClick={handleContactRequestDeny}
                               >
                                 <CloseIcon />
@@ -77,7 +102,8 @@ const ContactRequests = (props) => {
                               <Button
                                 variant="outlined"
                                 size="small"
-                                onClick={handleContactRequestAccept}
+                                color="success"
+                                onClick={() => handleContactRequestAccept(request)}
                               >
                                 <CheckIcon />
                               </Button>
@@ -103,6 +129,7 @@ const ContactRequests = (props) => {
                               <Button 
                                 variant="outlined"
                                 size="small"
+                                color="secondary"
                                 onClick={handleProfileLinkClick}
                               >
                                 <PersonIcon />
@@ -110,6 +137,7 @@ const ContactRequests = (props) => {
                               <Button 
                                 variant="outlined"
                                 size="small"
+                                color="error"
                                 onClick={handleContactRequestDeny}
                                 sx={{
                                   marginLeft: ".25em"
@@ -120,7 +148,8 @@ const ContactRequests = (props) => {
                               <Button 
                                 variant="outlined"
                                 size="small"
-                                onClick={handleContactRequestAccept}
+                                color="success"
+                                onClick={() => handleContactRequestAccept(request)}
                                 sx={{
                                   marginLeft: ".25em"
                                 }}
