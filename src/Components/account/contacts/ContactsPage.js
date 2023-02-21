@@ -9,7 +9,7 @@ import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
 
 const ContactsPage = () => {
-  const { user } = UserAuth();
+  const { user, setUser } = UserAuth();
 
   const contacts = [
     {
@@ -85,6 +85,7 @@ const ContactsPage = () => {
         <>
           <ContactRequests 
             user={user}
+            setUser={setUser}
           />
           <ContactsList 
             contacts={contacts}
