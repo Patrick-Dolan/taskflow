@@ -120,7 +120,8 @@ const UserAuthDialog = (props) => {
         email: registerEmail,
         emailControl: registerEmail.toLowerCase(),
         uid: newUserCredentials.user.uid,
-        contactRequests: []
+        contactRequests: [],
+        contacts: []
       }
       // Add user to database 
       await updateUserDBEntry(newUserCredentials.user, userDetails);
