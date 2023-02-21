@@ -117,7 +117,8 @@ const ContactAddDialog = (props) => {
 
       if (requestRecipient?.uid) {
         const newContactRequest = {
-          displayName: user.displayName.toLowerCase(),
+          displayName: user.displayName,
+          displayNameControl: user.displayName.toLowerCase(),
           email: user.email.toLowerCase(),
           photoURL: user.photoURL,
           uid: user.uid
