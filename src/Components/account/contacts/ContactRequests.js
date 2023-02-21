@@ -15,8 +15,28 @@ const ContactRequests = (props) => {
     alert("Profile link clicked");
   }
 
-  const handleContactRequestDeny = () => {
-    alert("Request denied clicked");
+  const handleContactRequestDeny = async (contactToAdd) => {
+    // Filter out denied contact request to remove it from list
+    const filteredContactRequests = user.contactRequests.filter(e => e.uid !== contactToAdd.uid);
+
+    const updatedUserDetails = {
+      contactRequests: [...filteredContactRequests]
+    }
+
+    try {
+      await updateUserDBEntry(user, updatedUserDetails);
+
+      // Update local user to refresh component state
+      const updatedUser = {
+        ...user,
+        ...updatedUserDetails
+      }
+      setUser(updatedUser);
+
+      console.log("Contact request successfully removed.");
+    } catch(e) {
+      console.log(e.message);
+    }
   }
 
   const handleContactRequestAccept = async (contactToAdd) => {
@@ -93,7 +113,7 @@ const ContactRequests = (props) => {
                                 variant="outlined"
                                 size="small"
                                 color="error"
-                                onClick={handleContactRequestDeny}
+                                onClick={() => handleContactRequestDeny(request)}
                               >
                                 <CloseIcon />
                               </Button>
@@ -138,7 +158,7 @@ const ContactRequests = (props) => {
                                 variant="outlined"
                                 size="small"
                                 color="error"
-                                onClick={handleContactRequestDeny}
+                                onClick={() => handleContactRequestDeny(request)}
                                 sx={{
                                   marginLeft: ".25em"
                                 }}
