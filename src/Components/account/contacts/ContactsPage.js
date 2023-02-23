@@ -7,9 +7,12 @@ import ContactAddDialog from "../../dialogs/ContactAddDialog";
 import { Container } from "@mui/system";
 import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
+import { Snackbar, Alert } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 const ContactsPage = () => {
   const { user, setUser } = UserAuth();
+  const theme = useTheme();
 
   const contacts = [
     {
@@ -53,6 +56,9 @@ const ContactsPage = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [searchedContact, setSearchedContact] = useState("");
   const [openAddContactDialog, setOpenAddContactDialog] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarAlertSeverity, setSnackbarAlertSeverity] = useState("success")
 
   const handleContactSelection = (contact) => {
     setSelectedContact(contact);
@@ -86,6 +92,9 @@ const ContactsPage = () => {
           <ContactRequests 
             user={user}
             setUser={setUser}
+            setSnackbarOpen={setSnackbarOpen}
+            setSnackbarMessage={setSnackbarMessage}
+            setSnackbarAlertSeverity={setSnackbarAlertSeverity}
           />
           <ContactsList 
             contacts={contacts}
@@ -99,6 +108,20 @@ const ContactsPage = () => {
         setOpen={setOpenAddContactDialog}
         onClose={() => setOpenAddContactDialog(false)}
       />
+      <Snackbar
+        open={snackbarOpen} 
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert 
+          severity={snackbarAlertSeverity} 
+          sx={{
+          backgroundColor: theme.palette.success.light
+          }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   )
 }
