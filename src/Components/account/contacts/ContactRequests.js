@@ -7,7 +7,7 @@ import { useTheme } from "@emotion/react";
 import { updateUserDBEntry } from "../../../FirebaseFunctions";
 
 const ContactRequests = (props) => {
-  const { user, setUser } = props;
+  const { user, setUser, setSnackbarOpen, setSnackbarMessage, setSnackbarAlertSeverity } = props;
   const theme = useTheme();
   const mobileScreenSize = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -32,8 +32,6 @@ const ContactRequests = (props) => {
         ...updatedUserDetails
       }
       setUser(updatedUser);
-
-      console.log("Contact request successfully removed.");
     } catch(e) {
       console.log(e.message);
     }
@@ -58,10 +56,13 @@ const ContactRequests = (props) => {
       }
       setUser(updatedUser);
 
-      // TODO set up snackbar for success and error
-      console.log("Contact added successfully.");
+      setSnackbarAlertSeverity("success");
+      setSnackbarMessage("Contact added.");
+      setSnackbarOpen(true);
     } catch(e) {
-      console.log(e.message);
+      setSnackbarAlertSeverity("error");
+      setSnackbarMessage("Error adding contact to contacts.");
+      setSnackbarOpen(true);
     }
   }
 
