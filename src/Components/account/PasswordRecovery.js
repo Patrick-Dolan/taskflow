@@ -17,6 +17,7 @@ const PasswordRecovery = () => {
 
     try {
       await passwordResetEmail(passwordEmail);
+      // TODO set up snackbar for password reset
       console.log("Password Reset Email Sent");
     } catch (e) {
       console.log(e.message);
