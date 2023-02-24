@@ -78,6 +78,13 @@ const ContactAddDialog = (props) => {
             setUsernameErrorMessage("You have already sent a contact request to this user.");
             return
           }
+          // Check if request recipient is already on current users contacts list
+          if (user.contacts.some(e => e.email === requestRecipient.email)) {
+            setUsernameCheckingProgress(false);
+            setUsernameError(true);
+            setUsernameErrorMessage("You already have this user on your contacts list.");
+            return
+          }
           const updatedRecipient = {
             ...requestRecipient,
             contactRequests: [...requestRecipient.contactRequests, newContactRequest]
@@ -128,6 +135,13 @@ const ContactAddDialog = (props) => {
           setEmailCheckingProgress(false);
           setEmailError(true);
           setEmailErrorMessage("You have already sent a contact request to this user.");
+          return
+        }
+        // Check if request recipient is already on current users contacts list
+        if (user.contacts.some(e => e.email === requestRecipient.email)) {
+          setEmailCheckingProgress(false);
+          setEmailError(true);
+          setEmailErrorMessage("You already have this user on your contacts list.");
           return
         }
         const updatedRecipient = {
