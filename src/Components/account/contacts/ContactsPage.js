@@ -1,5 +1,4 @@
 import ContactsList from "./ContactsList";
-import { v4 as uuid } from "uuid";
 import { useState } from "react";
 import ContactDetails from "./ContactDetails";
 import ContactsToolbar from "./ContactsToolbar";
@@ -9,49 +8,55 @@ import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
 import { Snackbar, Alert } from "@mui/material";
 import { useTheme } from "@emotion/react";
+// For contacts placeholder testing
+// import { v4 as uuid } from "uuid";
 
 const ContactsPage = () => {
   const { user, setUser } = UserAuth();
   const theme = useTheme();
 
-  const contacts = [
-    {
-      displayName: "BarkNessMonster",
-      uid: uuid(),
-      email: "barknessmonster@example.com",
-      photoURL: "https://dummyimage.com/300x300/000075/fff?text=B"
-    },
-    {
-      displayName: "PoodlePuzzle",
-      uid: uuid(),
-      email: "poodlepuzzle@example.com",
-      photoURL: "https://dummyimage.com/300x300/bfef45/fff?text=P"
-    },
-    {
-      displayName: "LabradorLaugh",
-      uid: uuid(),
-      email: "labradorlaugh@example.com",
-      photoURL: "https://dummyimage.com/300x300/ffe119/fff?text=L"
-    },
-    {
-      displayName: "GoldenGiggle",
-      uid: uuid(),
-      email: "goldengiggle@example.com",
-      photoURL: "https://dummyimage.com/300x300/f58231/fff?text=G"
-    },
-    {
-      displayName: "HoundHilarity",
-      uid: uuid(),
-      email: "houndhilarity@example.com",
-      photoURL: "https://dummyimage.com/300x300/469990/fff?text=H"
-    },
-    {
-      displayName: "ChihuahuaComedy",
-      uid: uuid(),
-      email: "chihuahuacomedy@example.com",
-      photoURL: "https://dummyimage.com/300x300/f032e6/fff?text=C"
-    }
-  ];
+  // ------------------- FOR TESTING -------------------
+  // Contacts placeholder, going to keep for now because I may need to use it in the future for testing.
+  // const contactsPlaceholder = [
+  //   {
+  //     displayName: "BarkNessMonster",
+  //     uid: uuid(),
+  //     email: "barknessmonster@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/000075/fff?text=B"
+  //   },
+  //   {
+  //     displayName: "PoodlePuzzle",
+  //     uid: uuid(),
+  //     email: "poodlepuzzle@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/bfef45/fff?text=P"
+  //   },
+  //   {
+  //     displayName: "LabradorLaugh",
+  //     uid: uuid(),
+  //     email: "labradorlaugh@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/ffe119/fff?text=L"
+  //   },
+  //   {
+  //     displayName: "GoldenGiggle",
+  //     uid: uuid(),
+  //     email: "goldengiggle@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/f58231/fff?text=G"
+  //   },
+  //   {
+  //     displayName: "HoundHilarity",
+  //     uid: uuid(),
+  //     email: "houndhilarity@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/469990/fff?text=H"
+  //   },
+  //   {
+  //     displayName: "ChihuahuaComedy",
+  //     uid: uuid(),
+  //     email: "chihuahuacomedy@example.com",
+  //     photoURL: "https://dummyimage.com/300x300/f032e6/fff?text=C"
+  //   }
+  // ];
+  // ------------------- FOR TESTING -------------------
+
   const [showContactDetails, setShowContactDetails] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [searchedContact, setSearchedContact] = useState("");
@@ -74,10 +79,14 @@ const ContactsPage = () => {
     setOpenAddContactDialog(true);
   }
 
+  const handleDeleteContact = () => {
+    alert("delete clicked");
+  }
+
   return (
     <Container maxWidth="md">
       <ContactsToolbar 
-        contacts={contacts}
+        contacts={user.contacts}
         searchedContact={searchedContact}
         setSearchedContact={setSearchedContact}
         openAddContactDialog={handleOpenAddContactDialog}
@@ -86,6 +95,7 @@ const ContactsPage = () => {
         <ContactDetails 
           contact={selectedContact}
           goBackToContactsList={handleGoBackToContactsList}
+          deleteContact={handleDeleteContact}
         />
       ) : (
         <>
@@ -102,7 +112,7 @@ const ContactsPage = () => {
             : (null)
           }
           <ContactsList 
-            contacts={contacts}
+            contacts={user.contacts}
             searchedContact={searchedContact}
             selectContact={handleContactSelection}
           />
