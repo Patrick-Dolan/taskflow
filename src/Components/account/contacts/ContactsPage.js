@@ -89,13 +89,18 @@ const ContactsPage = () => {
         />
       ) : (
         <>
-          <ContactRequests 
-            user={user}
-            setUser={setUser}
-            setSnackbarOpen={setSnackbarOpen}
-            setSnackbarMessage={setSnackbarMessage}
-            setSnackbarAlertSeverity={setSnackbarAlertSeverity}
-          />
+          {(user.contactRequests.length > 0) 
+            ? (
+              <ContactRequests 
+                user={user}
+                setUser={setUser}
+                setSnackbarOpen={setSnackbarOpen}
+                setSnackbarMessage={setSnackbarMessage}
+                setSnackbarAlertSeverity={setSnackbarAlertSeverity}
+              />
+            )
+            : (null)
+          }
           <ContactsList 
             contacts={contacts}
             searchedContact={searchedContact}
