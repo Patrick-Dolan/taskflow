@@ -1,8 +1,8 @@
 import { Avatar, Button, Grid, Paper, Typography } from "@mui/material";
-import { Container } from "@mui/system";
+import { Container, Box } from "@mui/system";
 
 const ContactDetails = (props) => {
-  const { contact, goBackToContactsList } = props;
+  const { contact, goBackToContactsList, deleteContact } = props;
 
   return (
     <>
@@ -40,6 +40,17 @@ const ContactDetails = (props) => {
               </Button>
             </Grid>
           </Grid>
+          <Box sx={{marginTop: "2em"}}>
+            <Typography variant="body1">Delete contact.</Typography>
+            <Typography variant="caption">Note that once deleted this action cannot be undone by any other means than resending a contact request to the user you have removed.</Typography>
+            <Button 
+              variant="outlined"
+              color="error"
+              onClick={() => alert("Profile page button clicked")}
+            >
+              Delete contact
+            </Button>
+          </Box>
         </Container>
       </Paper>
     </>
