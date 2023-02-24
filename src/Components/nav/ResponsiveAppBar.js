@@ -210,7 +210,7 @@ const ResponsiveAppBar = (props) => {
                 {(user?.uid) ? (
                   <div>
                     {settings.map((setting) => (
-                      (setting === 'Contacts')
+                      (setting === 'Contacts' && user.contactRequests.length > 0)
                         ? (
                           <MenuItem key={setting} onClick={handleCloseUserMenu}>
                             <Badge
