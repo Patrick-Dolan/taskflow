@@ -1,4 +1,4 @@
-import { Accordion, Typography, AccordionSummary, AccordionDetails, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper, Button, useMediaQuery, Grid } from "@mui/material";
+import { Accordion, Typography, AccordionSummary, AccordionDetails, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper, Button, useMediaQuery, Grid, Badge } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -72,7 +72,12 @@ const ContactRequests = (props) => {
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
-          <Typography>New contact requests</Typography>
+          <Badge
+            variant="dot"
+            color="secondary"
+          >
+            <Typography>New contact requests</Typography>
+          </Badge>
         </AccordionSummary>
         <AccordionDetails>
           {(user?.contactRequests.length > 0)
