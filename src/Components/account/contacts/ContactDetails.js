@@ -46,7 +46,7 @@ const ContactDetails = (props) => {
             <Button 
               variant="outlined"
               color="error"
-              onClick={deleteContact}
+              onClick={() => deleteContact(contact)}
             >
               Delete contact
             </Button>
