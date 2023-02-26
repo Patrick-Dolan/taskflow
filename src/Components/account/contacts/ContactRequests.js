@@ -4,7 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import { useTheme } from "@emotion/react";
-import { updateUserDBEntry } from "../../../FirebaseFunctions";
+import { getUserDetailsByEmail, updateUserDBEntry } from "../../../FirebaseFunctions";
 
 const ContactRequests = (props) => {
   const { user, setUser, setSnackbarOpen, setSnackbarMessage, setSnackbarAlertSeverity } = props;
@@ -46,8 +46,25 @@ const ContactRequests = (props) => {
       contactRequests: [...filteredContactRequests]
     }
 
+    
     try {
+      // Update user
       await updateUserDBEntry(user, updatedUserDetails);
+      
+      // Update contactRequestSender contacts
+      const sender = await getUserDetailsByEmail(contactToAdd.email);
+      const updatedSenderContactList = [...sender.contacts, {
+        displayName: user.displayName,
+        displayNameControl: user.displayName.toLowerCase(),
+        email: user.email.toLowerCase(),
+        photoURL: user.photoURL,
+        uid: user.uid
+      }];
+      const updatedSenderDetails = {
+        ...sender,
+        contacts: updatedSenderContactList
+      }
+      await updateUserDBEntry(sender, updatedSenderDetails);
       
       // Update local user to refresh component state
       const updatedUser = {
