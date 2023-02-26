@@ -8,6 +8,7 @@ import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
 import { Snackbar, Alert } from "@mui/material";
 import { useTheme } from "@emotion/react";
+import { updateUserDBEntry } from "../../../FirebaseFunctions";
 // For contacts placeholder testing
 // import { v4 as uuid } from "uuid";
 
@@ -79,8 +80,28 @@ const ContactsPage = () => {
     setOpenAddContactDialog(true);
   }
 
-  const handleDeleteContact = () => {
-    alert("delete clicked");
+  const handleDeleteContact = async (contactToDelete) => {
+    try {
+      // Build new user details objects
+      const updatedContacts = user.contacts.filter(e => e.email !== contactToDelete.email);
+      const userDetails = {
+        contacts: updatedContacts
+      }
+
+      await updateUserDBEntry(user, userDetails);
+      handleGoBackToContactsList();
+
+      // Update local state to reflect database changes
+      setUser({
+        ...user,
+        contacts: updatedContacts
+      })
+
+      // TODO: add snackbar to confirm deletion for user
+      console.log("contact delete successful");
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   return (
