@@ -6,7 +6,7 @@ import ContactAddDialog from "../../dialogs/ContactAddDialog";
 import { Container } from "@mui/system";
 import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { updateUserDBEntry } from "../../../FirebaseFunctions";
 // For contacts placeholder testing
@@ -132,11 +132,17 @@ const ContactsPage = () => {
             )
             : (null)
           }
-          <ContactsList 
-            contacts={user.contacts}
-            searchedContact={searchedContact}
-            selectContact={handleContactSelection}
-          />
+          {(user.contacts.length > 0)
+            ? (
+              <ContactsList 
+                contacts={user.contacts}
+                searchedContact={searchedContact}
+                selectContact={handleContactSelection}
+              />
+            )
+            : (
+              <Typography variant="body2">No contacts to show.</Typography>
+            )}
         </>
       )}
       <ContactAddDialog 
