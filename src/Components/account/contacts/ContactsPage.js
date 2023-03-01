@@ -8,7 +8,7 @@ import ContactRequests from "./ContactRequests";
 import { UserAuth } from "../../../Contexts/AuthContext";
 import { Snackbar, Alert, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { updateUserDBEntry } from "../../../FirebaseFunctions";
+import { getUserDetailsByEmail, updateUserDBEntry } from "../../../FirebaseFunctions";
 // For contacts placeholder testing
 // import { v4 as uuid } from "uuid";
 
@@ -88,7 +88,19 @@ const ContactsPage = () => {
         contacts: updatedContacts
       }
 
+      // Update current user
       await updateUserDBEntry(user, userDetails);
+
+      // Build deleted user new details object
+      const deletedContactUser = await getUserDetailsByEmail(contactToDelete.email);
+      const deletedContactUserUpdatedContacts = deletedContactUser.contacts.filter(e => e.email !== user.email);
+      const deletedContactUserDetails = {
+        contacts: deletedContactUserUpdatedContacts
+      }
+
+      // Update deleted users contacts
+      await updateUserDBEntry(deletedContactUser, deletedContactUserDetails);
+
       handleGoBackToContactsList();
 
       // Update local state to reflect database changes
