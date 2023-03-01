@@ -3,13 +3,11 @@ import { Typography, Avatar, List, ListItem, ListItemAvatar, Grid, ListItemText,
 import { UserAuth } from "../../Contexts/AuthContext";
 import { useState } from "react";
 import SettingsIcon from '@mui/icons-material/Settings';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PersonIcon from '@mui/icons-material/Person';
 import AccountDetails from "./AccountDetails";
-import AccountSettings from "./AccountSettings";
-import Contacts from "./contacts/Contacts";
 import AccountEdit from "./AccountEdit";
 import { useTheme } from "@emotion/react";
+import Settings from "../settings/Settings";
 
 const Account = () => {
   const auth = UserAuth();
@@ -17,14 +15,12 @@ const Account = () => {
   const theme = useTheme();
   const [bottomNavValue, setBottomNavValue] = useState(0);
   const [showDetails, setShowDetails] = useState(true);
-  const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAccountEdit, setShowAccountEdit] = useState(false);
   const mobileScreenSize = useMediaQuery(theme.breakpoints.down("sm"));
   
   const clearConditionalWindowState = () => {
     setShowDetails(false);
-    setShowContacts(false);
     setShowSettings(false);
     setShowAccountEdit(false);
   }
@@ -35,15 +31,9 @@ const Account = () => {
     setShowDetails(true);
   }
   
-  const handleContactsClick = () => {
-    clearConditionalWindowState();
-    setBottomNavValue(1);
-    setShowContacts(true);
-  }
-  
   const handleSettingsClick = () => {
     clearConditionalWindowState();
-    setBottomNavValue(2);
+    setBottomNavValue(1);
     setShowSettings(true);
   }
   
@@ -92,16 +82,6 @@ const Account = () => {
                     </ListItemButton>
                   </ListItem>
                   <ListItem>
-                    <ListItemButton onClick={handleContactsClick}>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <PeopleAltIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={"Contacts"} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem>
                     <ListItemButton onClick={handleSettingsClick}>
                       <ListItemAvatar>
                         <Avatar>
@@ -119,8 +99,7 @@ const Account = () => {
         </Grid>
         <Grid item xs={12} sm={8} md={8} sx={{paddingBottom: {xs: "5em"}}} elevation={1}>
           {(showDetails) ? <AccountDetails user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
-          {(showContacts) ? <Contacts /> : null}
-          {(showSettings) ? <AccountSettings /> : null}
+          {(showSettings) ? <Settings /> : null}
           {(showAccountEdit) ? <AccountEdit user={user} handleAccountEditClick={handleAccountEditClick} /> : null}
         </Grid>
       </Grid>
@@ -135,7 +114,6 @@ const Account = () => {
               }}
             >
               <BottomNavigationAction label="Account" icon={<PersonIcon />} onClick={handleDetailsClick} />
-              <BottomNavigationAction label="Contacts" icon={<PeopleAltIcon />} onClick={handleContactsClick} />
               <BottomNavigationAction label="Settings" icon={<SettingsIcon />} onClick={handleSettingsClick} />
             </BottomNavigation>
           </Paper>
