@@ -57,6 +57,7 @@ export const usernameAvailable = async (newDisplayName) => {
   return (username !== newDisplayName.toLowerCase()) ? true : false;
 }
 
+// Retrieve user by handles
 export const getUserDetailsByUsername = async (searchedDisplayName) => {
   const q = query(collection(db, "users"), where("displayNameControl", "==", searchedDisplayName.toLowerCase()));
 
@@ -80,3 +81,23 @@ export const getUserDetailsByEmail = async (searchedEmail) => {
   });
   return user;
 }
+
+// TODO See if this code can be used when deleting a user account to remove contact from other users.
+// export const deleteContactFromUsers = async (contactToDelete) => {
+//   const q = query(collection(db, "users"), where("contacts", "array-contains", contactToDelete));
+
+//   const querySnapshot = await getDocs(q);
+//   console.log(querySnapshot)
+//   querySnapshot.forEach((doc) => {
+//     console.log(doc)
+//     // // doc.data() is never undefined for query doc snapshots
+//     // console.log(doc.id, " => ", doc.data());
+//     const userWithContact = doc.data();
+//     console.log(userWithContact);
+//     const newContacts = userWithContact.contacts.filter(e => e.email !== contactToDelete.email);
+//     const userDetails = {
+//       contacts: newContacts
+//     }
+//     updateUserDBEntry(userWithContact, userDetails);
+//   });
+// }
