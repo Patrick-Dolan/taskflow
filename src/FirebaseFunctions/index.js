@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc } from "firebase/firestore";
+import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc, addDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
 // ================= Firebase Auth Functions =================
@@ -31,6 +31,22 @@ export const updateUserDBEntry = async (user, userDetails) => {
     createdAt: user.createdAt || serverTimestamp()
   }
   await setDoc(docRef, payload, { merge: true });
+}
+
+// Add project to database
+export const addProjectToDB = async (userID, project) => {
+  await addDoc(collection(db, "users", userID, "projects"), project);
+}
+
+// Get projects
+export const getProjects = async (userID) => {
+  const querySnapshot = await getDocs(collection(db, "users", userID, "projects"));
+  const projects = [];
+  querySnapshot.forEach((doc) => {
+    const project = {...doc.data(), id: doc.id};
+    projects.push(project);
+  });
+  return projects;
 }
 
 // Delete user firestore entry
