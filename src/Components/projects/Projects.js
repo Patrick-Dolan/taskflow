@@ -4,7 +4,6 @@ import ProjectCreateDialog from "./ProjectCreateDialog";
 import ProjectsToolbar from "./ProjectsToolbar";
 import ProjectsList from "./ProjectsList";
 import ProjectDetails from "./ProjectDetails";
-import { v4 as uuid } from "uuid";
 import { getProjects } from "../../FirebaseFunctions";
 import { UserAuth } from "../../Contexts/AuthContext";
 
