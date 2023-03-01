@@ -10,39 +10,49 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useState } from 'react';
-import { v4 as uuid } from "uuid";
+import { addProjectToDB } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ProjectCreateDialog = (props) => {
-  const { open, setOpen, projects, setProjects, setSelectedProject } = props; 
+  const { user } = UserAuth();
+  const { open, setOpen, setSelectedProject, refreshProjects, setRefreshProjects } = props; 
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [error, setError] = useState(false);
 
 
   const handleClose = () => {
+    setProjectName("");
+    setProjectDescription("");
     setError(false);
     setOpen(false);
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     // Sets selected project to an empty object if create project button is clicked while in project details to hide details component
     setSelectedProject({});
 
-    // Add project to projects array
-    setProjects([...projects, {
-      id: uuid(),
+    // Build project object
+    const newProject = {
       name: projectName.trim(),
-      description: projectDescription.trim()
-    }])
+      description: projectDescription.trim(),
+      tasks: []
+    }
 
-    // Close project create dialog box and reset create project state
-    setProjectName("");
-    setProjectDescription("");
-    setOpen(false);
+    try {
+      await addProjectToDB(user.uid, newProject);
+      console.log("Project added successfully.");
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    // Close project create dialog box and refresh project list on projects page
+    setRefreshProjects(!refreshProjects);
+    handleClose();
   }
 
   const handleSubmit = (e) => {
