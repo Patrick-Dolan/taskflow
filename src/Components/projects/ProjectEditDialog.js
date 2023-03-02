@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { updateProjectDBEntry } from '../../FirebaseFunctions';
+import { updateProjectDB } from '../../FirebaseFunctions';
 import { UserAuth } from '../../Contexts/AuthContext';
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -36,7 +36,7 @@ const ProjectEditDialog = (props) => {
     }
 
     try {
-      await updateProjectDBEntry(user.uid, updatedProject);
+      await updateProjectDB(user.uid, updatedProject);
       // TODO add snackbar for success and failure of project updates
       console.log("Project updated successfully.")
     } catch (e) {
