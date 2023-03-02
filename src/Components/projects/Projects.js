@@ -80,6 +80,8 @@ const Projects = () => {
     setOpenProjectCreate(true);
   }
 
+  // TODO create handleRefresh function to refresh projects list and pass to create, edit, and delete functionality
+
   return (
     <Container maxWidth="md">
       <ProjectsToolbar 
@@ -94,6 +96,8 @@ const Projects = () => {
           projects={projects}
           setSelectedProject={setSelectedProject}
           setProjects={setProjects}
+          refreshProjects={refreshProjects}
+          setRefreshProjects={setRefreshProjects}
         />
       ) : (
         <ProjectsList 
