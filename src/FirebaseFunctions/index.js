@@ -33,22 +33,6 @@ export const updateUserDBEntry = async (user, userDetails) => {
   await setDoc(docRef, payload, { merge: true });
 }
 
-// Add project to database
-export const addProjectToDB = async (userID, project) => {
-  await addDoc(collection(db, "users", userID, "projects"), project);
-}
-
-// Get projects
-export const getProjects = async (userID) => {
-  const querySnapshot = await getDocs(collection(db, "users", userID, "projects"));
-  const projects = [];
-  querySnapshot.forEach((doc) => {
-    const project = {...doc.data(), id: doc.id};
-    projects.push(project);
-  });
-  return projects;
-}
-
 // Delete user firestore entry
 // TODO When tasks, project, etc... are added to user delete subcollections then user otherwise subcollections arent deleted by firebase.
 export const deleteUserFirestoreEntry = async (userId) => {
@@ -96,6 +80,31 @@ export const getUserDetailsByEmail = async (searchedEmail) => {
     user = {...doc.data()};
   });
   return user;
+}
+
+// ===== Project functions =====
+
+// Add project to database
+export const addProjectToDB = async (userID, project) => {
+  await addDoc(collection(db, "users", userID, "projects"), project);
+}
+
+// Get projects
+export const getProjects = async (userID) => {
+  const querySnapshot = await getDocs(collection(db, "users", userID, "projects"));
+  const projects = [];
+  querySnapshot.forEach((doc) => {
+    const project = {...doc.data(), id: doc.id};
+    projects.push(project);
+  });
+  return projects;
+}
+
+// Update project
+
+export const updateProjectDBEntry = async (userID, project) => {
+  const docRef = doc(db, "users", userID, "projects", project.id );
+  await setDoc(docRef, project, { merge: true });
 }
 
 // TODO See if this code can be used when deleting a user account to remove contact from other users.
