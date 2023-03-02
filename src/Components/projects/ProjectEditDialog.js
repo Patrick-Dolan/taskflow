@@ -18,7 +18,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const ProjectEditDialog = (props) => {
   const { user } = UserAuth();
-  const { open, setOpen, project, setSelectedProject, setRefreshProjects, refreshProjects } = props; 
+  const { open, setOpen, project, setSelectedProject, refreshProjectsList } = props; 
   const [editedProjectName, setEditedProjectName] = useState(project?.name);
   const [editedProjectDescription, setEditedProjectDescription] = useState(project?.description);
   const [error, setError] = useState(false);
@@ -44,7 +44,7 @@ const ProjectEditDialog = (props) => {
     }
     
     // Update ProjectsList component 
-    setRefreshProjects(!refreshProjects);
+    refreshProjectsList();
 
     // Updates state for details page to show new info
     setSelectedProject(updatedProject)
