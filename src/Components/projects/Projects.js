@@ -83,6 +83,8 @@ const Projects = () => {
   const handleRefreshProjectsList = () => {
     setRefreshProjects(!refreshProjects);
   }
+  
+  // TODO set up a loading bar for projects
 
   return (
     <Container maxWidth="md">
@@ -95,9 +97,7 @@ const Projects = () => {
       {(selectedProject?.id) ? (
         <ProjectDetails
           project={selectedProject}
-          projects={projects}
           setSelectedProject={setSelectedProject}
-          setProjects={setProjects}
           refreshProjectsList={handleRefreshProjectsList}
         />
       ) : (
