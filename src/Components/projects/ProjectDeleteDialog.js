@@ -5,21 +5,30 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@emotion/react';
+import { deleteProjectFromDB } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
 
 const ProjectDeleteDialog = (props) => {
-  const { open, setOpen, project, projects, setProjects, setSelectedProject } = props;
+  const { open, setOpen, project, setSelectedProject, refreshProjectsList } = props;
   const theme = useTheme();
+  const { user } = UserAuth();
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleDeleteProject = () => {
-    // Filter out project to be deleted
-    const updatedProjects = projects.filter((p) => p.id !== project.id)
+  const handleDeleteProject = async () => {
+    // Delete project from firestore
+    try {
+      await deleteProjectFromDB(user.uid, project.id)
+      // TODO add snackbar for success and failure of delete project
+      console.log("Project successfully deleted from database.");
+    } catch (e) {
+      console.log(e.message);
+    }
 
-    // Update projects without the deleted one
-    setProjects([...updatedProjects]);
+    // Refresh ProjectsList component
+    refreshProjectsList();
 
     // Set selected project to null to send user back to project list
     setSelectedProject(null);
