@@ -9,13 +9,16 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import { updateProjectDBEntry } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ProjectEditDialog = (props) => {
-  const { open, setOpen, project, projects, setProjects, setSelectedProject } = props; 
+  const { user } = UserAuth();
+  const { open, setOpen, project, setSelectedProject, setRefreshProjects, refreshProjects } = props; 
   const [editedProjectName, setEditedProjectName] = useState(project?.name);
   const [editedProjectDescription, setEditedProjectDescription] = useState(project?.description);
   const [error, setError] = useState(false);
@@ -25,20 +28,23 @@ const ProjectEditDialog = (props) => {
     setOpen(false);
   };
 
-  const handleUpdateProject = () => {
-    // Filter out old version of project and create updatedProject object
-    const filteredProjects = projects.filter((p) => p.id !== project.id);
+  const handleUpdateProject = async () => {
     const updatedProject = {
       ...project,
       name: editedProjectName,
       description: editedProjectDescription
     }
+
+    try {
+      await updateProjectDBEntry(user.uid, updatedProject);
+      // TODO add snackbar for success and failure of project updates
+      console.log("Project updated successfully.")
+    } catch (e) {
+      console.log(e.message);
+    }
     
-    // Update ProjectsList component information by adding updated project back to projects
-    setProjects([
-      ...filteredProjects,
-      updatedProject
-    ])
+    // Update ProjectsList component 
+    setRefreshProjects(!refreshProjects);
 
     // Updates state for details page to show new info
     setSelectedProject(updatedProject)
