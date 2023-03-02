@@ -102,9 +102,15 @@ export const getProjects = async (userID) => {
 
 // Update project
 
-export const updateProjectDBEntry = async (userID, project) => {
+export const updateProjectDB = async (userID, project) => {
   const docRef = doc(db, "users", userID, "projects", project.id );
   await setDoc(docRef, project, { merge: true });
+}
+
+// Delete project
+
+export const deleteProjectFromDB = async (userID, projectID) => {
+  await deleteDoc(doc(db, "users", userID, "projects", projectID))
 }
 
 // TODO See if this code can be used when deleting a user account to remove contact from other users.
