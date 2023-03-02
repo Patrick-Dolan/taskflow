@@ -5,7 +5,7 @@ import ProjectEditDialog from "./ProjectEditDialog";
 import ProjectDeleteDialog from "./ProjectDeleteDialog";
 
 const ProjectDetails = (props) => {
-  const { project, projects, setProjects, setSelectedProject } = props;
+  const { project, projects, setProjects, setSelectedProject, refreshProjects, setRefreshProjects } = props;
   const [openProjectEdit, setOpenProjectEdit] = useState(false);
   const [openProjectDelete, setOpenProjectDelete] = useState(false);
   
@@ -48,9 +48,9 @@ const ProjectDetails = (props) => {
         open={openProjectEdit}
         setOpen={setOpenProjectEdit}
         project={project}
-        projects={projects}
-        setProjects={setProjects}
         setSelectedProject={setSelectedProject}
+        refreshProjects={refreshProjects}
+        setRefreshProjects={setRefreshProjects}
       />
       <ProjectDeleteDialog 
         open={openProjectDelete}
