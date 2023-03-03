@@ -174,7 +174,7 @@ const ContactsPage = () => {
         <Alert 
           severity={snackbarAlertSeverity} 
           sx={{
-          backgroundColor: theme.palette.success.light
+          backgroundColor: (snackbarAlertSeverity === "success") ? theme.palette.success.light : theme.palette.error.light
           }}
         >
           {snackbarMessage}
