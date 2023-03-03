@@ -109,10 +109,14 @@ const ContactsPage = () => {
         contacts: updatedContacts
       })
 
-      // TODO: add snackbar to confirm deletion for user
-      console.log("contact delete successful");
+      // Notify user of success or failure of deletion
+      setSnackbarAlertSeverity("success")
+      setSnackbarMessage("Contact deleted.")
+      setSnackbarOpen(true);
     } catch (e) {
-      console.log(e.message);
+      setSnackbarAlertSeverity("error")
+      setSnackbarMessage(`Contact deletion error: ${e.message}`)
+      setSnackbarOpen(true);
     }
   }
 
