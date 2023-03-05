@@ -11,7 +11,6 @@ const ContactsToolbar = (props) => {
 
   const filteredContacts = contacts.map((e) => e.displayName)
 
-  // TODO set up css and classname
   const buttonStyles = {
     maxHeight: "2.5em",
     minHeight: "2.5em",

@@ -11,7 +11,6 @@ const ProjectsToolbar = (props) => {
 
   const projectNames = projects.map((e) => (e.name));
 
-  // TODO set up css and classname
   const buttonStyles = {
     maxHeight: "2.5em",
     minHeight: "2.5em",
