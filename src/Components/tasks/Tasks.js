@@ -149,9 +149,6 @@ const Tasks = () => {
       <TaskCreateDialog
         open={openTaskCreate}
         setOpen={setOpenTaskCreate}
-        tasks={tasks}
-        setTasks={setTasks}
-        handleTaskCreateOpen={handleTaskCreateOpen}
         setSelectedTask={setSelectedTask}
       />
     </Container>
