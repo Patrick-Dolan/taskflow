@@ -1,6 +1,7 @@
 import { db } from "../firebase";
-import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc, addDoc } from "firebase/firestore";
+import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc, addDoc, Timestamp } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
+import dayjs from "dayjs";
 
 // ================= Firebase Auth Functions =================
 
@@ -117,7 +118,28 @@ export const deleteProjectFromDB = async (userID, projectID) => {
 
 // Add task to unassignedTasks  database
 export const addUnassignedTaskToDB = async (userID, task) => {
-  await addDoc(collection(db, "users", userID, "unassignedTasks"), task);
+  // Convert dueDate to timestamp so it can be stored in firestore
+  const dateConvertedToFirestoreTimestampTask = {
+    ...task,
+    dueDate: Timestamp.fromDate(task.dueDate.toDate()),
+  }
+  await addDoc(collection(db, "users", userID, "unassignedTasks"), dateConvertedToFirestoreTimestampTask);
+}
+
+// Get tasks
+export const getTasks = async (userID) => {
+  const querySnapshot = await getDocs(collection(db, "users", userID, "unassignedTasks"));
+  const tasks = [];
+  querySnapshot.forEach((doc) => {
+    const task = {...doc.data(), id: doc.id};
+    // Convert dueDate to dayjs object so it can used in app
+    const dateConvertedToDayjsTask = {
+      ...task,
+      dueDate: dayjs(task.dueDate.toDate())
+    }
+    tasks.push(dateConvertedToDayjsTask);
+  });
+  return tasks;
 }
 
 // TODO See if this code can be used when deleting a user account to remove contact from other users.
