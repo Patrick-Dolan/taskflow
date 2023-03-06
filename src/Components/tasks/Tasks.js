@@ -120,6 +120,7 @@ const Tasks = () => {
     // },
   ]
   );
+  const [refreshTasks, setRefreshTasks] = useState(false);
   const [openTaskCreate, setOpenTaskCreate] = useState(false);
   const [searchedTask, setSearchedTask] = useState("");
   const [selectedTask, setSelectedTask] = useState({});
@@ -137,10 +138,14 @@ const Tasks = () => {
 
     fetchTasks();
 
-  }, [user.uid])
+  }, [refreshTasks, user.uid])
 
   const handleTaskCreateOpen = () => {
     setOpenTaskCreate(true);
+  }
+
+  const handleTasksListRefresh = () => {
+    setRefreshTasks(!refreshTasks);
   }
 
   return (
@@ -176,6 +181,7 @@ const Tasks = () => {
         open={openTaskCreate}
         setOpen={setOpenTaskCreate}
         setSelectedTask={setSelectedTask}
+        refreshTasks={handleTasksListRefresh}
       />
     </Container>
   )

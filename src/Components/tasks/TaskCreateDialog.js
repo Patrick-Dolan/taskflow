@@ -16,7 +16,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const TaskCreateDialog = (props) => {
   const { user } = UserAuth();
-  const { open, setOpen, setSelectedTask } = props; 
+  const { open, setOpen, setSelectedTask, refreshTasks } = props; 
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [error, setError] = useState(false);
@@ -52,7 +52,8 @@ const TaskCreateDialog = (props) => {
       console.log(e.message);
     }
 
-    // Close task create dialog box and reset create task state
+    // Close task create dialog box and refresh tasks list
+    refreshTasks();
     handleClose();
   }
 
