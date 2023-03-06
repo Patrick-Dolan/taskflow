@@ -45,6 +45,7 @@ const ProjectCreateDialog = (props) => {
 
     try {
       await addProjectToDB(user.uid, newProject);
+      // TODO add toast for success and error
       console.log("Project added successfully.");
     } catch (e) {
       console.log(e.message);
