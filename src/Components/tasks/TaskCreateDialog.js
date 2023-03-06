@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { addUnassignedTaskToDB } from '../../FirebaseFunctions';
 import { UserAuth } from '../../Contexts/AuthContext';
-import { Timestamp } from 'firebase/firestore';
 
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -41,7 +40,7 @@ const TaskCreateDialog = (props) => {
     const newTask = {
       name: taskName.trim(),
       description: taskDescription.trim(),
-      dueDate: Timestamp.fromDate(dueDate.toDate()) ,
+      dueDate: dueDate,
       dueDateAssigned: dueDateAssigned,
       taskCompleted: false
     }
