@@ -60,13 +60,12 @@ const Projects = () => {
   const [openProjectCreate, setOpenProjectCreate] = useState(false);
 
   useEffect(() => {
+    // TODO set up loading bar on projects
     const fetchProjects = async () => {
       try {
         const projects = await getProjects(user.uid);
         console.log(projects)
-        setProjects([
-          ...projects
-        ]) 
+        setProjects([...projects]) 
       } catch (e) {
         console.log(e.message);
       }
