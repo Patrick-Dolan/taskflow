@@ -1,18 +1,14 @@
 import { Container, Box } from '@mui/system';
 import { forwardRef, useState } from 'react';
-import { TextField, Grid } from '@mui/material';
+import { TextField, Grid, Button, Dialog, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { v4 as uuid } from "uuid";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import dayjs from 'dayjs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { addUnassignedTaskToDB } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
+import { Timestamp } from 'firebase/firestore';
 
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -20,7 +16,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const TaskCreateDialog = (props) => {
-  const { open, setOpen, tasks, setTasks, setSelectedTask } = props; 
+  const { user } = UserAuth();
+  const { open, setOpen, setSelectedTask } = props; 
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [error, setError] = useState(false);
@@ -29,30 +26,35 @@ const TaskCreateDialog = (props) => {
 
 
   const handleClose = () => {
+    setTaskName("");
+    setTaskDescription("");
     setError(false);
-    setOpen(false);
     setDueDateAssigned(false);
+    setOpen(false);
   };
 
-  const handleCreateProject = () => {
+  const handleCreateTask = async () => {
     // Sets selected task to and empty object if create task button is clicked while in task details to hide details component
     setSelectedTask({});
 
     // Add task to tasks array
-    setTasks([...tasks, {
-      id: uuid(),
+    const newTask = {
       name: taskName.trim(),
       description: taskDescription.trim(),
-      dueDate: dueDate,
+      dueDate: Timestamp.fromDate(dueDate.toDate()) ,
       dueDateAssigned: dueDateAssigned,
       taskCompleted: false
-    }])
+    }
+
+    try {
+      await addUnassignedTaskToDB(user.uid, newTask);
+      console.log("Task created and uploaded successfully.");
+    } catch (e) {
+      console.log(e.message);
+    }
 
     // Close task create dialog box and reset create task state
-    setTaskName("");
-    setTaskDescription("");
-    setDueDateAssigned(false);
-    setOpen(false);
+    handleClose();
   }
 
   const handleDateChange = (newDate) => {
@@ -64,7 +66,7 @@ const TaskCreateDialog = (props) => {
     (taskName !== "") ? setError(false) : setError(true);
 
     if (taskName.length >= 1) {
-      handleCreateProject();
+      handleCreateTask();
     }
   }
 
