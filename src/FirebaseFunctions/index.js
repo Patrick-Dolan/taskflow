@@ -113,6 +113,13 @@ export const deleteProjectFromDB = async (userID, projectID) => {
   await deleteDoc(doc(db, "users", userID, "projects", projectID))
 }
 
+// ===== Task functions =====
+
+// Add task to unassignedTasks  database
+export const addUnassignedTaskToDB = async (userID, task) => {
+  await addDoc(collection(db, "users", userID, "unassignedTasks"), task);
+}
+
 // TODO See if this code can be used when deleting a user account to remove contact from other users.
 // export const deleteContactFromUsers = async (contactToDelete) => {
 //   const q = query(collection(db, "users"), where("contacts", "array-contains", contactToDelete));
