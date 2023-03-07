@@ -1,24 +1,20 @@
 import { Container, Box } from '@mui/system';
 import { forwardRef, useState } from 'react';
-import { TextField, Grid } from '@mui/material';
+import { TextField, Grid, Button, Dialog, AppBar, Toolbar, IconButton,Typography, Slide } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import dayjs from 'dayjs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import dayjs from 'dayjs';
+import { updateUnassignedTaskDB } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const TaskEditDialog = (props) => {
-  const { open, setOpen, task, tasks, setTasks, setSelectedTask } = props; 
+  const { user } = UserAuth();
+  const { open, setOpen, task, setSelectedTask, refreshTasksList } = props; 
   const [editedTaskName, setEditedTaskName] = useState(task?.name);
   const [editedTaskDescription, setEditedTaskDescription] = useState(task?.description);
   const [error, setError] = useState(false);
@@ -31,9 +27,7 @@ const TaskEditDialog = (props) => {
     (task.dueDateAssigned === true) ? setDueDateAssigned(task.dueDateAssigned) : setDueDateAssigned(false);
   };
 
-  const handleUpdateTask = () => {
-    // Filter out old version of task and create updatedTask object
-    const filteredTasks = tasks.filter((t) => t.id !== task.id);
+  const handleUpdateTask = async () => {
     const updatedTask = {
       ...task,
       name: editedTaskName.trim(),
@@ -41,17 +35,21 @@ const TaskEditDialog = (props) => {
       dueDate: dueDate,
       dueDateAssigned: dueDateAssigned
     }
-    
-    // Add task to tasks array
-    setTasks([
-      ...filteredTasks,
-      updatedTask
-    ])
 
-    // Updates state for details page to show new info
-    setSelectedTask(updatedTask)
+    try {
+      await updateUnassignedTaskDB(user.uid, updatedTask);
 
-    // Close task create dialog box and reset create task state
+      // Update state for details page to show new info
+      setSelectedTask(updatedTask)
+
+      // TODO add toast for update success/error
+      console.log("Task db entry updated successfully")
+    } catch(e) {
+      console.log(e.message)
+    }
+
+    // Close task create dialog box and refresh tasks list
+    refreshTasksList();
     handleClose();
   }
 
