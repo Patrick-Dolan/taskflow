@@ -5,7 +5,7 @@ import TaskEditDialog from "./TaskEditDialog";
 import TaskDeleteDialog from "./TaskDeleteDialog";
 
 const TaskDetails = (props) => {
-  const { task, tasks, setTasks, setSelectedTask } = props;
+  const { task, tasks, setTasks, setSelectedTask, refreshTasksList } = props;
   const [openTaskEdit, setOpenTaskEdit] = useState(false);
   const [openTaskDelete, setOpenTaskDelete] = useState(false);
 
@@ -90,9 +90,8 @@ const TaskDetails = (props) => {
         open={openTaskEdit}
         setOpen={setOpenTaskEdit}
         task={task}
-        tasks={tasks}
-        setTasks={setTasks}
         setSelectedTask={setSelectedTask}
+        refreshTasksList={refreshTasksList}
       />
       <TaskDeleteDialog 
         open={openTaskDelete}
