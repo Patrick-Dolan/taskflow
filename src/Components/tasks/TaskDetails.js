@@ -3,8 +3,11 @@ import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import TaskEditDialog from "./TaskEditDialog";
 import TaskDeleteDialog from "./TaskDeleteDialog";
+import { UserAuth } from "../../Contexts/AuthContext";
+import { updateUnassignedTaskDB } from "../../FirebaseFunctions";
 
 const TaskDetails = (props) => {
+  const { user } = UserAuth();
   const { task, tasks, setTasks, setSelectedTask, refreshTasksList } = props;
   const [openTaskEdit, setOpenTaskEdit] = useState(false);
   const [openTaskDelete, setOpenTaskDelete] = useState(false);
@@ -21,22 +24,24 @@ const TaskDetails = (props) => {
     setOpenTaskDelete(true);
   }
 
-  const handleTaskCompletedUpdate = (taskStatus) => {
-    // Set local task to completed to update component then build new completedTask object
-    task.taskCompleted = taskStatus;
-
-    const completedTask = {
+  const handleTaskCompletedUpdate = async (taskStatus) => {
+    const updatedTask = {
       ...task,
       taskCompleted: taskStatus
     }
 
-    // filter out old uncompleted task then update tasks state with new completed task
-    const filteredTasks = tasks.filter((t) => t.id !== task.id);
+    try {
+      await updateUnassignedTaskDB(user.uid, updatedTask);
+      refreshTasksList();
+      
+      // Update local state of TaskDetails
+      setSelectedTask(updatedTask);
 
-    setTasks([
-      ...filteredTasks,
-      completedTask
-    ]);
+      // TODO add toast for success/error
+      console.log("Task completion status updated.");
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   return (
