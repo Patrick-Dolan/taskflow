@@ -146,12 +146,18 @@ export const getTasks = async (userID) => {
 
 export const updateUnassignedTaskDB = async (userID, task) => {
   const docRef = doc(db, "users", userID, "unassignedTasks", task.id );
-  // Update dueDate for task to allow it to be stored in firestore
+  // Update dueDate data type for task to allow it to be stored in firestore
   const updatedTask = {
     ...task,
     dueDate: Timestamp.fromDate(task.dueDate.toDate())
   }
   await setDoc(docRef, updatedTask, { merge: true });
+}
+
+// Delete Task
+
+export const deleteUnassignedTaskFromDB = async (userID, taskID) => {
+  await deleteDoc(doc(db, "users", userID, "unassignedTasks", taskID))
 }
 
 // TODO See if this code can be used when deleting a user account to remove contact from other users.
