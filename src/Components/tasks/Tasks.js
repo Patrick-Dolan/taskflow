@@ -162,6 +162,7 @@ const Tasks = () => {
           tasks={tasks}
           setTasks={setTasks}
           setSelectedTask={setSelectedTask}
+          refreshTasksList={handleTasksListRefresh}
         />
         ) : (
         (tasks?.length > 0)
