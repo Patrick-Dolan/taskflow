@@ -5,21 +5,28 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@emotion/react';
+import { deleteUnassignedTaskFromDB } from '../../FirebaseFunctions';
+import { UserAuth } from '../../Contexts/AuthContext';
 
 const TaskDeleteDialog = (props) => {
-  const { open, setOpen, task, tasks, setTasks, setSelectedTask } = props;
+  const { user } = UserAuth();
+  const { open, setOpen, task, setSelectedTask, refreshTasksList } = props;
   const theme = useTheme();
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleDeleteTask = () => {
-    // Filter out task to be deleted
-    const updatedTasks = tasks.filter((p) => p.id !== task.id)
-
-    // Update tasks without the deleted one
-    setTasks([...updatedTasks]);
+  const handleDeleteTask = async () => {
+    // Delete task from firestore
+    try {
+      await deleteUnassignedTaskFromDB(user.uid, task.id)
+      refreshTasksList();
+      // TODO add toast for success/error
+      console.log("Task deleted successfully")
+    } catch (e) {
+      console.log(e.message)
+    }
 
     // Set selected task to null to send user back to task list
     setSelectedTask(null);
