@@ -37,6 +37,10 @@ const ProjectEditDialog = (props) => {
 
     try {
       await updateProjectDB(user.uid, updatedProject);
+
+      // Updates state for details page to show new info
+      setSelectedProject(updatedProject);
+
       // TODO add snackbar for success and failure of project updates
       console.log("Project updated successfully.")
     } catch (e) {
@@ -45,9 +49,6 @@ const ProjectEditDialog = (props) => {
     
     // Update ProjectsList component 
     refreshProjectsList();
-
-    // Updates state for details page to show new info
-    setSelectedProject(updatedProject)
 
     // Close ProjectEditDialog
     setOpen(false);
