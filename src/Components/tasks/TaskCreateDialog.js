@@ -47,6 +47,7 @@ const TaskCreateDialog = (props) => {
 
     try {
       await addUnassignedTaskToDB(user.uid, newTask);
+      // TODO add toast for success/error
       console.log("Task created and uploaded successfully.");
     } catch (e) {
       console.log(e.message);
