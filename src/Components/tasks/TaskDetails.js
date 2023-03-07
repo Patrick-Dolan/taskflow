@@ -8,7 +8,7 @@ import { updateUnassignedTaskDB } from "../../FirebaseFunctions";
 
 const TaskDetails = (props) => {
   const { user } = UserAuth();
-  const { task, tasks, setTasks, setSelectedTask, refreshTasksList } = props;
+  const { task, setSelectedTask, refreshTasksList } = props;
   const [openTaskEdit, setOpenTaskEdit] = useState(false);
   const [openTaskDelete, setOpenTaskDelete] = useState(false);
 
@@ -33,7 +33,7 @@ const TaskDetails = (props) => {
     try {
       await updateUnassignedTaskDB(user.uid, updatedTask);
       refreshTasksList();
-      
+
       // Update local state of TaskDetails
       setSelectedTask(updatedTask);
 
@@ -102,9 +102,8 @@ const TaskDetails = (props) => {
         open={openTaskDelete}
         setOpen={setOpenTaskDelete}
         task={task}
-        tasks={tasks}
-        setTasks={setTasks}
         setSelectedTask={setSelectedTask}
+        refreshTasksList={refreshTasksList}
       />
     </>
   )
