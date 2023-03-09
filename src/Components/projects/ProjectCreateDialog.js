@@ -19,7 +19,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const ProjectCreateDialog = (props) => {
   const { user } = UserAuth();
-  const { open, setOpen, setSelectedProject, refreshProjects, setRefreshProjects } = props; 
+  const { open, setOpen, setSelectedProject, refreshProjectsList } = props; 
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [error, setError] = useState(false);
@@ -52,7 +52,7 @@ const ProjectCreateDialog = (props) => {
     }
 
     // Close project create dialog box and refresh project list on projects page
-    setRefreshProjects(!refreshProjects);
+    refreshProjectsList();
     handleClose();
   }
 
