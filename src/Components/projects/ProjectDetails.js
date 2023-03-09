@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 import ProjectEditDialog from "./ProjectEditDialog";
 import ProjectDeleteDialog from "./ProjectDeleteDialog";
+import TasksList from "../tasks/TasksList";
 
 const ProjectDetails = (props) => {
   const { project, setSelectedProject, refreshProjectsList } = props;
@@ -37,10 +38,10 @@ const ProjectDetails = (props) => {
       <Typography variant="caption">Description</Typography>
       <Typography>{(project?.description) ? `${project.description}` : "No description available."}</Typography>
       <Typography variant="caption">Tasks</Typography>
-      {(project.tasks) ? (
-        project?.tasks.map((task, index) => (
-          <Typography key={index}>{task}</Typography>
-        ))
+      {(project?.tasks && project?.tasks?.length > 0) ? (
+        <TasksList 
+          tasks={project.tasks}
+        />
       ) : (
           <Typography>No tasks assigned to this project.</Typography>
       )}
