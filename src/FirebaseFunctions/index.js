@@ -96,7 +96,22 @@ export const getProjects = async (userID) => {
   const projects = [];
   querySnapshot.forEach((doc) => {
     const project = {...doc.data(), id: doc.id};
-    projects.push(project);
+    if (project?.tasks) {
+      const tasksWithDayjsConvertedDueDates = project?.tasks.map((task) => {
+        const convertedTask = {
+          ...task,
+          dueDate: dayjs(task.dueDate.toDate())
+        }
+        return convertedTask;
+      })
+      const projectWithDueDateConvertedToDayjs = {
+        ...project,
+        tasks: tasksWithDayjsConvertedDueDates
+      }
+      projects.push(projectWithDueDateConvertedToDayjs);
+    } else {
+      projects.push(project);
+    }
   });
   return projects;
 }
@@ -105,6 +120,12 @@ export const getProjects = async (userID) => {
 
 export const updateProjectDB = async (userID, project) => {
   const docRef = doc(db, "users", userID, "projects", project.id );
+  if (project?.tasks) {
+    const tasksDueDateConvertedForFirestore = project.tasks.map((task) => {
+      return {...task, dueDate: Timestamp.fromDate(task.dueDate.toDate())};
+    });
+    project.tasks = tasksDueDateConvertedForFirestore;
+  }
   await setDoc(docRef, project, { merge: true });
 }
 
