@@ -1,6 +1,6 @@
 import { Container, Box } from '@mui/system';
-import { forwardRef, useState } from 'react';
-import { TextField, Grid, Button, Dialog, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { forwardRef, useState, useEffect } from 'react';
+import { TextField, Grid, Button, Dialog, AppBar, Toolbar, IconButton, Typography, MenuItem } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { addUnassignedTaskToDB } from '../../FirebaseFunctions';
 import { UserAuth } from '../../Contexts/AuthContext';
+import { getProjects, updateProjectDB } from '../../FirebaseFunctions';
 
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -17,11 +18,26 @@ const Transition = forwardRef(function Transition(props, ref) {
 const TaskCreateDialog = (props) => {
   const { user } = UserAuth();
   const { open, setOpen, setSelectedTask, refreshTasks } = props; 
+  const [projects, setProjects] = useState([]);
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [error, setError] = useState(false);
   const [dueDate, setDueDate] = useState(dayjs());
   const [dueDateAssigned, setDueDateAssigned] = useState(false);
+  const [assignedProjectID, setAssignedProjectID] = useState("");
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projects = await getProjects(user.uid);
+        setProjects([...projects]) 
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+
+    fetchProjects();
+  }, [user.uid])
 
 
   const handleClose = () => {
@@ -46,7 +62,20 @@ const TaskCreateDialog = (props) => {
     }
 
     try {
-      await addUnassignedTaskToDB(user.uid, newTask);
+      // Check if task is assigned to a project
+      if (assignedProjectID.length <= 0) {
+        await addUnassignedTaskToDB(user.uid, newTask);
+      } else {
+        // Get selected project then update to include new task and update database
+        const filteredProjects = projects.filter(e => e.id === assignedProjectID)
+        const selectedProject = filteredProjects[0];
+        console.log(selectedProject)
+        const updatedProject = {
+          ...selectedProject,
+          tasks: (selectedProject?.tasks.length >= 1) ? [...selectedProject.tasks, newTask] : [newTask]
+        }
+        await updateProjectDB(user.uid, updatedProject);
+      }
       // TODO add toast for success/error
       console.log("Task created and uploaded successfully.");
     } catch (e) {
@@ -158,6 +187,23 @@ const TaskCreateDialog = (props) => {
                   multiline
                   fullWidth
                 />
+              </Grid>
+              <Grid container item>
+                <TextField
+                  select
+                  fullWidth
+                  defaultValue=""
+                  margin="normal"
+                  label="Assign to Project"
+                  onChange={(e) => setAssignedProjectID(e.target.value)}
+                >
+                  <MenuItem value=""><Typography variant="body2">None</Typography></MenuItem>
+                  {projects.map((project) => (
+                    <MenuItem key={project.id} value={project.id}>
+                      <Typography variant="body2">{project.name}</Typography>
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Button type="submit" variant="outlined">Create task</Button>
             </Grid>
