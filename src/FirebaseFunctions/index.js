@@ -2,6 +2,7 @@ import { db } from "../firebase";
 import { doc, collection, where, getDocs, setDoc, serverTimestamp, query, deleteDoc, addDoc, Timestamp } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import dayjs from "dayjs";
+import { v4 } from "uuid";
 
 // ================= Firebase Auth Functions =================
 
@@ -122,7 +123,11 @@ export const updateProjectDB = async (userID, project) => {
   const docRef = doc(db, "users", userID, "projects", project.id );
   if (project?.tasks) {
     const tasksDueDateConvertedForFirestore = project.tasks.map((task) => {
-      return {...task, dueDate: Timestamp.fromDate(task.dueDate.toDate())};
+      return {
+        ...task, 
+        dueDate: Timestamp.fromDate(task.dueDate.toDate()),
+        id: v4()
+      };
     });
     project.tasks = tasksDueDateConvertedForFirestore;
   }
@@ -150,7 +155,22 @@ export const addUnassignedTaskToDB = async (userID, task) => {
 // Get tasks
 export const getTasks = async (userID) => {
   const querySnapshot = await getDocs(collection(db, "users", userID, "unassignedTasks"));
+  const projects = await getProjects(userID);
   const tasks = [];
+  // get tasks from assigned projects
+  projects?.forEach((project) => {
+    if (project?.tasks) {
+      // Convert dueDate in tasks to dayjs objects
+      project.tasks.forEach((task) => {
+        const updatedTask = {
+          ...task,
+          dueDate: dayjs(task.dueDate.toDate())
+        }
+        tasks.push(updatedTask);
+      })
+    }
+  });
+  // get tasks from unassigned projects
   querySnapshot.forEach((doc) => {
     const task = {...doc.data(), id: doc.id};
     // Convert dueDate to dayjs object so it can used in app
@@ -160,6 +180,8 @@ export const getTasks = async (userID) => {
     }
     tasks.push(dateConvertedToDayjsTask);
   });
+  console.log(tasks);
+
   return tasks;
 }
 
